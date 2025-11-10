@@ -1,0 +1,74 @@
+{
+  "modal": {
+    "title": "Einstellungen",
+    "closeAriaLabel": "Modal schließen"
+  },
+  "tabs": {
+    "difficulty": "Schwierigkeit",
+    "voice": "Stimme",
+    "language": "Sprache"
+  },
+  "difficulty": {
+    "levels": {
+      "elementary": {
+        "name": "Grundschule",
+        "description": "Klassen K-5: Einfache Sprache, häufige Hinweise, ermutigend"
+      },
+      "middle-school": {
+        "name": "Mittelschule",
+        "description": "Klassen 6-8: Klare Erklärungen, moderate Anleitung"
+      },
+      "high-school": {
+        "name": "Gymnasium",
+        "description": "Klassen 9-12: Standardterminologie, herausfordernde Fragen"
+      },
+      "college": {
+        "name": "Universität",
+        "description": "Hochschulbildung: Fachsprache, rigoroser Ansatz"
+      }
+    },
+    "setDifficultyAriaLabel": "Schwierigkeit auf {name} setzen"
+  },
+  "voice": {
+    "autoRead": {
+      "label": "KI-Antworten Automatisch Vorlesen",
+      "description": "KI-Nachrichten automatisch vorlesen, wenn sie eintreffen"
+    },
+    "voiceSelect": {
+      "label": "Stimme",
+      "description": "Wählen Sie die Stimme zum Vorlesen von Text",
+      "loading": "Stimmen werden geladen...",
+      "local": "(Lokal)",
+      "network": "(Netzwerk)"
+    },
+    "speechRate": {
+      "label": "Sprechgeschwindigkeit",
+      "slower": "0.5x (Langsamer)",
+      "faster": "2x (Schneller)"
+    },
+    "speechPitch": {
+      "label": "Stimmhöhe",
+      "lower": "0.5 (Tiefer)",
+      "higher": "2 (Höher)"
+    },
+    "volume": {
+      "label": "Lautstärke",
+      "mute": "0% (Stumm)",
+      "max": "100% (Maximum)"
+    },
+    "recognitionLanguage": {
+      "label": "Spracherkennungssprache",
+      "description": "Sprache für die Spracheingabeerkennung"
+    },
+    "testVoice": {
+      "button": "Stimme Testen",
+      "stopButton": "Test Stoppen",
+      "testUtterance": "So werde ich klingen, wenn ich Ihre Lösungen vorlese."
+    },
+    "toggleAutoReadAriaLabel": "Automatisches Vorlesen umschalten"
+  },
+  "language": {
+    "description": "Wählen Sie die Sprache für KI-Antworten und Schnittstellentext",
+    "setLanguageAriaLabel": "Sprache auf {name} setzen"
+  }
+}

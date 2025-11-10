@@ -1,0 +1,210 @@
+'use client';
+
+/**
+ * WhiteboardCanvas Example Integration
+ *
+ * This is an example showing how Agent 1 should integrate the WhiteboardControls
+ * component with the Excalidraw canvas. This file should be used as a reference
+ * when creating the actual WhiteboardCanvas.tsx component.
+ *
+ * IMPORTANT: This is just an example - Agent 1 will create the actual implementation.
+ */
+
+import { useState, useEffect, useCallback } from 'react';
+import { Excalidraw } from '@excalidraw/excalidraw';
+import type { ExcalidrawElement } from '@excalidraw/excalidraw/types/element/types';
+import type {
+  AppState,
+  BinaryFiles,
+  ExcalidrawImperativeAPI,
+} from '@excalidraw/excalidraw/types/types';
+import WhiteboardControls from './WhiteboardControls';
+
+interface WhiteboardCanvasProps {
+  /** Callback when elements change */
+  onElementsChange?: (elements: readonly ExcalidrawElement[]) => void;
+  /** Callback when the full scene changes */
+  onSceneChange?: (elements: readonly ExcalidrawElement[], appState: AppState, files: BinaryFiles) => void;
+  /** Initial whiteboard data to load */
+  initialData?: {
+    elements: readonly ExcalidrawElement[];
+    appState?: Partial<AppState>;
+    files?: BinaryFiles;
+  };
+  /** Optional conversation title for exports */
+  conversationTitle?: string;
+  /** Custom class name for the container */
+  className?: string;
+  /** Whether to show the controls toolbar */
+  showControls?: boolean;
+}
+
+export default function WhiteboardCanvas({
+  onElementsChange,
+  onSceneChange,
+  initialData,
+  conversationTitle,
+  className = '',
+  showControls = true,
+}: WhiteboardCanvasProps) {
+  // State management for Excalidraw
+  const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
+  const [elements, setElements] = useState<readonly ExcalidrawElement[]>(initialData?.elements || []);
+  const [appState, setAppState] = useState<Partial<AppState>>(initialData?.appState || {});
+  const [files, setFiles] = useState<BinaryFiles | null>(initialData?.files || null);
+
+  // Handle Excalidraw changes
+  const handleChange = useCallback(
+    (newElements: readonly ExcalidrawElement[], newAppState: AppState, newFiles: BinaryFiles) => {
+      setElements(newElements);
+      setAppState(newAppState);
+      setFiles(newFiles);
+
+      // Notify parent components
+      onElementsChange?.(newElements);
+      onSceneChange?.(newElements, newAppState, newFiles);
+    },
+    [onElementsChange, onSceneChange]
+  );
+
+  // Handle clear callback
+  const handleClear = useCallback(() => {
+    console.log('Whiteboard cleared');
+    // You can add additional logic here, such as:
+    // - Clearing local storage
+    // - Sending analytics event
+    // - Updating conversation state
+  }, []);
+
+  // Initialize Excalidraw with initial data
+  useEffect(() => {
+    if (excalidrawAPI && initialData) {
+      excalidrawAPI.updateScene({
+        elements: initialData.elements,
+        appState: initialData.appState,
+      });
+    }
+  }, [excalidrawAPI, initialData]);
+
+  return (
+    <div className={`whiteboard-canvas-container ${className}`}>
+      {/* Controls Toolbar - rendered above the canvas */}
+      {showControls && (
+        <div className="mb-4">
+          <WhiteboardControls
+            excalidrawAPI={excalidrawAPI}
+            elements={elements}
+            appState={appState}
+            files={files}
+            conversationTitle={conversationTitle}
+            onClear={handleClear}
+          />
+        </div>
+      )}
+
+      {/* Excalidraw Canvas */}
+      <div className="excalidraw-wrapper border rounded-lg overflow-hidden" style={{ height: '600px' }}>
+        <Excalidraw
+          ref={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
+          onChange={handleChange}
+          initialData={initialData}
+          // Optional: Configure Excalidraw appearance
+          theme="light"
+          // Optional: Configure initial app state
+          UIOptions={{
+            canvasActions: {
+              loadScene: true,
+              export: false, // We're using our custom export controls
+              saveAsImage: false, // We're using our custom export controls
+            },
+          }}
+        />
+      </div>
+
+      {/* Alternative: Controls can be placed below the canvas */}
+      {/* {showControls && (
+        <div className="mt-4">
+          <WhiteboardControls
+            excalidrawAPI={excalidrawAPI}
+            elements={elements}
+            appState={appState}
+            files={files}
+            conversationTitle={conversationTitle}
+            onClear={handleClear}
+          />
+        </div>
+      )} */}
+    </div>
+  );
+}
+
+/**
+ * USAGE EXAMPLE 1: Basic usage
+ *
+ * <WhiteboardCanvas
+ *   conversationTitle="Math Problem 1"
+ *   onElementsChange={(elements) => console.log('Elements changed:', elements)}
+ * />
+ */
+
+/**
+ * USAGE EXAMPLE 2: With initial data
+ *
+ * <WhiteboardCanvas
+ *   conversationTitle="Geometry Problem"
+ *   initialData={{
+ *     elements: savedElements,
+ *     appState: savedAppState,
+ *     files: savedFiles
+ *   }}
+ *   onSceneChange={(elements, appState, files) => {
+ *     // Save to localStorage or backend
+ *     saveWhiteboard({ elements, appState, files });
+ *   }}
+ * />
+ */
+
+/**
+ * USAGE EXAMPLE 3: Without controls (just the canvas)
+ *
+ * <WhiteboardCanvas
+ *   showControls={false}
+ *   className="h-screen"
+ * />
+ */
+
+/**
+ * INTEGRATION WITH CHAT COMPONENT
+ *
+ * When integrating with the main chat interface, you might do:
+ *
+ * export default function ChatPage() {
+ *   const [showWhiteboard, setShowWhiteboard] = useState(false);
+ *   const [currentConversation, setCurrentConversation] = useState(null);
+ *
+ *   return (
+ *     <div className="chat-container">
+ *       <ChatMessages />
+ *
+ *       <button onClick={() => setShowWhiteboard(!showWhiteboard)}>
+ *         Toggle Whiteboard
+ *       </button>
+ *
+ *       {showWhiteboard && (
+ *         <WhiteboardCanvas
+ *           conversationTitle={currentConversation?.title}
+ *           initialData={currentConversation?.whiteboardData}
+ *           onSceneChange={(elements, appState, files) => {
+ *             // Auto-save whiteboard state
+ *             saveConversationWhiteboard(currentConversation.id, {
+ *               elements,
+ *               appState,
+ *               files
+ *             });
+ *           }}
+ *         />
+ *       )}
+ *     </div>
+ *   );
+ * }
+ */

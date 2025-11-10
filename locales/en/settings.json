@@ -1,0 +1,74 @@
+{
+  "modal": {
+    "title": "Settings",
+    "closeAriaLabel": "Close modal"
+  },
+  "tabs": {
+    "difficulty": "Difficulty",
+    "voice": "Voice",
+    "language": "Language"
+  },
+  "difficulty": {
+    "levels": {
+      "elementary": {
+        "name": "Elementary",
+        "description": "Grades K-5: Simple language, frequent hints, encouraging"
+      },
+      "middle-school": {
+        "name": "Middle School",
+        "description": "Grades 6-8: Clear explanations, moderate guidance"
+      },
+      "high-school": {
+        "name": "High School",
+        "description": "Grades 9-12: Standard terminology, challenging questions"
+      },
+      "college": {
+        "name": "College",
+        "description": "Higher education: Technical language, rigorous approach"
+      }
+    },
+    "setDifficultyAriaLabel": "Set difficulty to {name}"
+  },
+  "voice": {
+    "autoRead": {
+      "label": "Auto-Read AI Responses",
+      "description": "Automatically read AI messages aloud when they arrive"
+    },
+    "voiceSelect": {
+      "label": "Voice",
+      "description": "Select the voice to use for reading text aloud",
+      "loading": "Loading voices...",
+      "local": "(Local)",
+      "network": "(Network)"
+    },
+    "speechRate": {
+      "label": "Speech Rate",
+      "slower": "0.5x (Slower)",
+      "faster": "2x (Faster)"
+    },
+    "speechPitch": {
+      "label": "Speech Pitch",
+      "lower": "0.5 (Lower)",
+      "higher": "2 (Higher)"
+    },
+    "volume": {
+      "label": "Volume",
+      "mute": "0% (Mute)",
+      "max": "100% (Max)"
+    },
+    "recognitionLanguage": {
+      "label": "Voice Recognition Language",
+      "description": "Language for voice input recognition"
+    },
+    "testVoice": {
+      "button": "Test Voice",
+      "stopButton": "Stop Test",
+      "testUtterance": "This is how I will sound when reading your solutions."
+    },
+    "toggleAutoReadAriaLabel": "Toggle auto-read"
+  },
+  "language": {
+    "description": "Select the language for AI responses and interface text",
+    "setLanguageAriaLabel": "Set language to {name}"
+  }
+}

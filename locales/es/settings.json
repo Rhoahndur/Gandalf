@@ -1,0 +1,74 @@
+{
+  "modal": {
+    "title": "Configuración",
+    "closeAriaLabel": "Cerrar modal"
+  },
+  "tabs": {
+    "difficulty": "Dificultad",
+    "voice": "Voz",
+    "language": "Idioma"
+  },
+  "difficulty": {
+    "levels": {
+      "elementary": {
+        "name": "Primaria",
+        "description": "Grados K-5: Lenguaje simple, pistas frecuentes, alentador"
+      },
+      "middle-school": {
+        "name": "Secundaria",
+        "description": "Grados 6-8: Explicaciones claras, orientación moderada"
+      },
+      "high-school": {
+        "name": "Preparatoria",
+        "description": "Grados 9-12: Terminología estándar, preguntas desafiantes"
+      },
+      "college": {
+        "name": "Universidad",
+        "description": "Educación superior: Lenguaje técnico, enfoque riguroso"
+      }
+    },
+    "setDifficultyAriaLabel": "Establecer dificultad a {name}"
+  },
+  "voice": {
+    "autoRead": {
+      "label": "Lectura Automática de Respuestas IA",
+      "description": "Leer automáticamente los mensajes de IA en voz alta cuando lleguen"
+    },
+    "voiceSelect": {
+      "label": "Voz",
+      "description": "Selecciona la voz para leer el texto en voz alta",
+      "loading": "Cargando voces...",
+      "local": "(Local)",
+      "network": "(Red)"
+    },
+    "speechRate": {
+      "label": "Velocidad de Habla",
+      "slower": "0.5x (Más lento)",
+      "faster": "2x (Más rápido)"
+    },
+    "speechPitch": {
+      "label": "Tono de Voz",
+      "lower": "0.5 (Más bajo)",
+      "higher": "2 (Más alto)"
+    },
+    "volume": {
+      "label": "Volumen",
+      "mute": "0% (Silencio)",
+      "max": "100% (Máximo)"
+    },
+    "recognitionLanguage": {
+      "label": "Idioma de Reconocimiento de Voz",
+      "description": "Idioma para el reconocimiento de entrada de voz"
+    },
+    "testVoice": {
+      "button": "Probar Voz",
+      "stopButton": "Detener Prueba",
+      "testUtterance": "Así es como sonaré cuando lea tus soluciones."
+    },
+    "toggleAutoReadAriaLabel": "Activar/desactivar lectura automática"
+  },
+  "language": {
+    "description": "Selecciona el idioma para las respuestas de la IA y el texto de la interfaz",
+    "setLanguageAriaLabel": "Establecer idioma a {name}"
+  }
+}

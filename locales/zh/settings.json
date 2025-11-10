@@ -1,0 +1,74 @@
+{
+  "modal": {
+    "title": "设置",
+    "closeAriaLabel": "关闭对话框"
+  },
+  "tabs": {
+    "difficulty": "难度",
+    "voice": "语音",
+    "language": "语言"
+  },
+  "difficulty": {
+    "levels": {
+      "elementary": {
+        "name": "小学",
+        "description": "K-5年级：简单语言，频繁提示，鼓励性"
+      },
+      "middle-school": {
+        "name": "初中",
+        "description": "6-8年级：清晰解释，适度指导"
+      },
+      "high-school": {
+        "name": "高中",
+        "description": "9-12年级：标准术语，挑战性问题"
+      },
+      "college": {
+        "name": "大学",
+        "description": "高等教育：技术语言，严谨方法"
+      }
+    },
+    "setDifficultyAriaLabel": "将难度设置为{name}"
+  },
+  "voice": {
+    "autoRead": {
+      "label": "自动朗读AI回复",
+      "description": "AI消息到达时自动大声朗读"
+    },
+    "voiceSelect": {
+      "label": "语音",
+      "description": "选择用于朗读文本的语音",
+      "loading": "正在加载语音...",
+      "local": "（本地）",
+      "network": "（网络）"
+    },
+    "speechRate": {
+      "label": "语速",
+      "slower": "0.5倍（较慢）",
+      "faster": "2倍（较快）"
+    },
+    "speechPitch": {
+      "label": "音调",
+      "lower": "0.5（较低）",
+      "higher": "2（较高）"
+    },
+    "volume": {
+      "label": "音量",
+      "mute": "0%（静音）",
+      "max": "100%（最大）"
+    },
+    "recognitionLanguage": {
+      "label": "语音识别语言",
+      "description": "语音输入识别的语言"
+    },
+    "testVoice": {
+      "button": "测试语音",
+      "stopButton": "停止测试",
+      "testUtterance": "这就是我朗读您的解答时的声音。"
+    },
+    "toggleAutoReadAriaLabel": "切换自动朗读"
+  },
+  "language": {
+    "description": "选择AI响应和界面文本的语言",
+    "setLanguageAriaLabel": "将语言设置为{name}"
+  }
+}

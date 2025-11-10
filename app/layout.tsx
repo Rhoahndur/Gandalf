@@ -1,0 +1,27 @@
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import { LanguageProvider } from '@/contexts/LanguageContext'
+import './globals.css'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata: Metadata = {
+  title: 'Gandalf - Math Tutor',
+  description: 'Learn math through Socratic questioning with Gandalf',
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en" className="h-full" suppressHydrationWarning>
+      <body className={`${inter.className} h-full bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
+    </html>
+  )
+}

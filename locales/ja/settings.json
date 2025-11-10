@@ -1,0 +1,74 @@
+{
+  "modal": {
+    "title": "設定",
+    "closeAriaLabel": "モーダルを閉じる"
+  },
+  "tabs": {
+    "difficulty": "難易度",
+    "voice": "音声",
+    "language": "言語"
+  },
+  "difficulty": {
+    "levels": {
+      "elementary": {
+        "name": "小学校",
+        "description": "K-5学年：簡単な言葉、頻繁なヒント、励まし"
+      },
+      "middle-school": {
+        "name": "中学校",
+        "description": "6-8学年：明確な説明、適度な指導"
+      },
+      "high-school": {
+        "name": "高校",
+        "description": "9-12学年：標準用語、挑戦的な質問"
+      },
+      "college": {
+        "name": "大学",
+        "description": "高等教育：専門用語、厳格なアプローチ"
+      }
+    },
+    "setDifficultyAriaLabel": "難易度を{name}に設定"
+  },
+  "voice": {
+    "autoRead": {
+      "label": "AI応答の自動読み上げ",
+      "description": "AIメッセージが届いたときに自動的に読み上げる"
+    },
+    "voiceSelect": {
+      "label": "音声",
+      "description": "テキストを読み上げる音声を選択",
+      "loading": "音声を読み込んでいます...",
+      "local": "（ローカル）",
+      "network": "（ネットワーク）"
+    },
+    "speechRate": {
+      "label": "読み上げ速度",
+      "slower": "0.5倍（遅く）",
+      "faster": "2倍（速く）"
+    },
+    "speechPitch": {
+      "label": "音の高さ",
+      "lower": "0.5（低く）",
+      "higher": "2（高く）"
+    },
+    "volume": {
+      "label": "音量",
+      "mute": "0%（ミュート）",
+      "max": "100%（最大）"
+    },
+    "recognitionLanguage": {
+      "label": "音声認識言語",
+      "description": "音声入力認識の言語"
+    },
+    "testVoice": {
+      "button": "音声をテスト",
+      "stopButton": "テストを停止",
+      "testUtterance": "これが解答を読み上げるときの音声です。"
+    },
+    "toggleAutoReadAriaLabel": "自動読み上げを切り替え"
+  },
+  "language": {
+    "description": "AIの応答とインターフェーステキストの言語を選択",
+    "setLanguageAriaLabel": "言語を{name}に設定"
+  }
+}
