@@ -166,9 +166,16 @@ export default function Home() {
 
     const result = loadWhiteboardState(currentConversationId)
     if (result.success && result.data) {
+      // Sanitize appState to prevent Excalidraw errors
+      const sanitizedAppState = {
+        ...result.data.appState,
+        // Ensure collaborators is always a Map (Excalidraw expects this)
+        collaborators: new Map(),
+      }
+
       setWhiteboardInitialData({
         elements: result.data.elements,
-        appState: result.data.appState,
+        appState: sanitizedAppState,
       })
     } else {
       setWhiteboardInitialData(null)
@@ -184,7 +191,14 @@ export default function Home() {
     // Get appState from Excalidraw API if available
     const appState = excalidrawAPIRef.current?.getAppState?.() || {}
 
-    saveWhiteboardState(currentConversationId, whiteboardElements, appState)
+    // Filter out fields that don't serialize well to localStorage
+    const {
+      collaborators,
+      // Remove other problematic fields that shouldn't persist
+      ...serializableAppState
+    } = appState
+
+    saveWhiteboardState(currentConversationId, whiteboardElements, serializableAppState)
   }, [whiteboardElements, currentConversationId])
 
   // Auto-read AI responses when enabled
