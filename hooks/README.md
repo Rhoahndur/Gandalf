@@ -15,15 +15,15 @@ A production-ready React hook for the Web Speech Recognition API with full TypeS
 
 ## Browser Compatibility
 
-| Browser | Support | Notes |
-|---------|---------|-------|
-| Chrome | ✅ Full | Best support, uses standard API |
-| Edge | ✅ Full | Chromium-based, full support |
-| Safari | ✅ Full | Uses webkit prefix |
-| Firefox | ❌ No | Not currently supported |
-| Opera | ✅ Full | Chromium-based, full support |
-| Mobile Chrome | ✅ Full | Android support |
-| Mobile Safari | ✅ Full | iOS 14.5+ |
+| Browser       | Support | Notes                           |
+| ------------- | ------- | ------------------------------- |
+| Chrome        | ✅ Full | Best support, uses standard API |
+| Edge          | ✅ Full | Chromium-based, full support    |
+| Safari        | ✅ Full | Uses webkit prefix              |
+| Firefox       | ❌ No   | Not currently supported         |
+| Opera         | ✅ Full | Chromium-based, full support    |
+| Mobile Chrome | ✅ Full | Android support                 |
+| Mobile Safari | ✅ Full | iOS 14.5+                       |
 
 **Global Usage:** ~93% of users (as of 2024)
 
@@ -40,40 +40,38 @@ import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
 ### Hook Signature
 
 ```typescript
-function useVoiceRecognition(
-  options?: UseVoiceRecognitionOptions
-): UseVoiceRecognitionReturn
+function useVoiceRecognition(options?: UseVoiceRecognitionOptions): UseVoiceRecognitionReturn;
 ```
 
 ### Options
 
 ```typescript
 interface UseVoiceRecognitionOptions {
-  lang?: string;              // Default: 'en-US'
-  continuous?: boolean;        // Default: true
-  interimResults?: boolean;    // Default: true
-  maxAlternatives?: number;    // Default: 1
+  lang?: string; // Default: 'en-US'
+  continuous?: boolean; // Default: true
+  interimResults?: boolean; // Default: true
+  maxAlternatives?: number; // Default: 1
 }
 ```
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `lang` | string | `'en-US'` | BCP 47 language tag (e.g., 'en-US', 'es-ES', 'fr-FR') |
-| `continuous` | boolean | `true` | Continue recognition after user stops speaking |
-| `interimResults` | boolean | `true` | Return interim results (live transcription) |
-| `maxAlternatives` | number | `1` | Maximum alternative transcriptions to consider |
+| Option            | Type    | Default   | Description                                           |
+| ----------------- | ------- | --------- | ----------------------------------------------------- |
+| `lang`            | string  | `'en-US'` | BCP 47 language tag (e.g., 'en-US', 'es-ES', 'fr-FR') |
+| `continuous`      | boolean | `true`    | Continue recognition after user stops speaking        |
+| `interimResults`  | boolean | `true`    | Return interim results (live transcription)           |
+| `maxAlternatives` | number  | `1`       | Maximum alternative transcriptions to consider        |
 
 ### Return Value
 
 ```typescript
 interface UseVoiceRecognitionReturn {
-  transcript: string;           // Current transcript text
-  isListening: boolean;         // Whether actively listening
-  isSupported: boolean;         // Browser support status
-  error: string | null;         // Error message if any
-  startListening: () => void;   // Start speech recognition
-  stopListening: () => void;    // Stop speech recognition
-  resetTranscript: () => void;  // Clear current transcript
+  transcript: string; // Current transcript text
+  isListening: boolean; // Whether actively listening
+  isSupported: boolean; // Browser support status
+  error: string | null; // Error message if any
+  startListening: () => void; // Start speech recognition
+  stopListening: () => void; // Stop speech recognition
+  resetTranscript: () => void; // Clear current transcript
 }
 ```
 
@@ -117,7 +115,7 @@ function VoiceInput() {
 
 ```typescript
 const { transcript, startListening } = useVoiceRecognition({
-  lang: 'es-ES',  // Spanish
+  lang: 'es-ES', // Spanish
   continuous: true,
   interimResults: true,
 });
@@ -158,13 +156,13 @@ function ChatInput({ onSendMessage }) {
 
 The hook provides user-friendly error messages for common issues:
 
-| Error Type | User Message | Cause |
-|------------|--------------|-------|
-| `not-allowed` | "Microphone access denied. Please allow microphone permissions..." | User denied permission |
-| `no-speech` | "No speech detected. Please try again." | No speech input detected |
-| `network` | "Network error occurred. Please check your internet connection." | Network failure |
-| `audio-capture` | "No microphone found. Please ensure a microphone is connected." | No mic available |
-| `aborted` | `null` | User stopped intentionally |
+| Error Type      | User Message                                                       | Cause                      |
+| --------------- | ------------------------------------------------------------------ | -------------------------- |
+| `not-allowed`   | "Microphone access denied. Please allow microphone permissions..." | User denied permission     |
+| `no-speech`     | "No speech detected. Please try again."                            | No speech input detected   |
+| `network`       | "Network error occurred. Please check your internet connection."   | Network failure            |
+| `audio-capture` | "No microphone found. Please ensure a microphone is connected."    | No mic available           |
+| `aborted`       | `null`                                                             | User stopped intentionally |
 
 ### Handling Errors
 
@@ -186,20 +184,20 @@ Common BCP 47 language codes:
 
 ```typescript
 const languages = [
-  'en-US',  // English (United States)
-  'en-GB',  // English (United Kingdom)
-  'es-ES',  // Spanish (Spain)
-  'es-MX',  // Spanish (Mexico)
-  'fr-FR',  // French (France)
-  'de-DE',  // German (Germany)
-  'it-IT',  // Italian (Italy)
-  'pt-BR',  // Portuguese (Brazil)
-  'zh-CN',  // Chinese (Simplified)
-  'ja-JP',  // Japanese (Japan)
-  'ko-KR',  // Korean (Korea)
-  'ru-RU',  // Russian (Russia)
-  'ar-SA',  // Arabic (Saudi Arabia)
-  'hi-IN',  // Hindi (India)
+  'en-US', // English (United States)
+  'en-GB', // English (United Kingdom)
+  'es-ES', // Spanish (Spain)
+  'es-MX', // Spanish (Mexico)
+  'fr-FR', // French (France)
+  'de-DE', // German (Germany)
+  'it-IT', // Italian (Italy)
+  'pt-BR', // Portuguese (Brazil)
+  'zh-CN', // Chinese (Simplified)
+  'ja-JP', // Japanese (Japan)
+  'ko-KR', // Korean (Korea)
+  'ru-RU', // Russian (Russia)
+  'ar-SA', // Arabic (Saudi Arabia)
+  'hi-IN', // Hindi (India)
 ];
 ```
 
@@ -212,8 +210,7 @@ const languages = [
 The hook automatically detects and uses the correct API:
 
 ```typescript
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 ```
 
 ### Transcript Processing
@@ -228,7 +225,7 @@ const SpeechRecognition =
 The hook uses `useRef` to prevent race conditions:
 
 ```typescript
-const isStartingRef = useRef(false);  // Prevents double-start
+const isStartingRef = useRef(false); // Prevents double-start
 ```
 
 ### Cleanup
@@ -378,6 +375,7 @@ Use these phrases to test accuracy:
 ## Privacy & Security
 
 The Web Speech Recognition API:
+
 - Sends audio to external servers (Google for Chrome, Apple for Safari)
 - Requires HTTPS in production (except localhost)
 - Requires explicit user permission
@@ -453,6 +451,7 @@ This hook is part of the Gandalf AI Math Tutor project.
 ## Support
 
 For issues or questions:
+
 1. Check browser compatibility
 2. Review error messages
 3. See usage examples above

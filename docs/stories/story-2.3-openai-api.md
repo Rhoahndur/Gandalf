@@ -61,7 +61,8 @@ export async function POST(req: Request) {
     // System prompt (placeholder for now, will be refined in EPIC-3)
     const systemMessage = {
       role: 'system',
-      content: 'You are a helpful math tutor who guides students using the Socratic method. Never give direct answers, only ask questions to help students discover solutions.',
+      content:
+        'You are a helpful math tutor who guides students using the Socratic method. Never give direct answers, only ask questions to help students discover solutions.',
     };
 
     // Limit context to last 15 messages to prevent token overflow
@@ -170,6 +171,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 ```
 
 **File:** `.env.local` (create but don't commit)
+
 ```
 OPENAI_API_KEY=sk-...your-actual-key...
 ```
@@ -179,6 +181,7 @@ OPENAI_API_KEY=sk-...your-actual-key...
 ## Error Handling Strategy
 
 ### Error Types
+
 1. **Missing API Key (401):** Return clear error message
 2. **Rate Limiting (429):** Return rate limit error, suggest retry
 3. **Invalid Request (400):** Validate input, return specific error
@@ -186,6 +189,7 @@ OPENAI_API_KEY=sk-...your-actual-key...
 5. **OpenAI Server Errors (500+):** Return generic error, log details
 
 ### Error Response Format
+
 ```typescript
 {
   error: string;
@@ -199,6 +203,7 @@ OPENAI_API_KEY=sk-...your-actual-key...
 ## Context Management
 
 ### Message Limiting
+
 - Keep last **15 messages** for context
 - Prevents token limit overflow (GPT-4 limit: 128k tokens)
 - Typical message: ~100-200 tokens
@@ -206,6 +211,7 @@ OPENAI_API_KEY=sk-...your-actual-key...
 - Buffer: 15 messages × 200 tokens = 3000 tokens (safe)
 
 ### Future Optimization
+
 - Implement sliding window with summarization
 - Compress older messages
 - Smart context pruning based on relevance
@@ -215,18 +221,18 @@ OPENAI_API_KEY=sk-...your-actual-key...
 ## Testing Checklist
 
 ### Basic Functionality
+
 - [ ] POST to `/api/chat` returns streaming response
 - [ ] System prompt is included in request
 - [ ] Conversation context maintained across requests
 - [ ] Streaming text appears word-by-word
 
 ### Test Cases
+
 ```typescript
 // Test 1: Simple message
 {
-  messages: [
-    { role: 'user', content: 'What is 2 + 2?' }
-  ]
+  messages: [{ role: 'user', content: 'What is 2 + 2?' }];
 }
 // Expected: Socratic response (not direct answer)
 
@@ -235,8 +241,8 @@ OPENAI_API_KEY=sk-...your-actual-key...
   messages: [
     { role: 'user', content: 'Solve: 2x + 5 = 13' },
     { role: 'assistant', content: 'What are we trying to find?' },
-    { role: 'user', content: 'x' }
-  ]
+    { role: 'user', content: 'x' },
+  ];
 }
 // Expected: Context-aware follow-up question
 
@@ -245,6 +251,7 @@ OPENAI_API_KEY=sk-...your-actual-key...
 ```
 
 ### Error Scenarios
+
 - [ ] Missing API key → 401 error
 - [ ] Invalid API key → 401 error
 - [ ] Malformed request body → 400 error
@@ -252,6 +259,7 @@ OPENAI_API_KEY=sk-...your-actual-key...
 - [ ] Network timeout → 500 error
 
 ### Integration Testing
+
 - [ ] Works with frontend `useChat` hook
 - [ ] Streaming displays correctly in UI
 - [ ] Error messages propagate to frontend
@@ -262,16 +270,19 @@ OPENAI_API_KEY=sk-...your-actual-key...
 ## Performance Considerations
 
 ### Edge Runtime
+
 - Using `export const runtime = 'edge'` for faster cold starts
 - Deploys globally via Vercel Edge Network
 - Lower latency for international users
 
 ### Streaming Benefits
+
 - User sees response immediately (better UX)
 - Perceived latency < 1 second (first token)
 - Full response: 2-3 seconds
 
 ### Monitoring
+
 - Log OpenAI API response times
 - Track token usage
 - Monitor error rates
@@ -291,12 +302,14 @@ OPENAI_API_KEY=sk-...your-actual-key...
 ## Handoff to Frontend
 
 After completing this story:
+
 - Frontend can integrate with `/api/chat`
 - Use `useChat` hook with default API endpoint
 - Streaming will work automatically
 - Error handling built into Vercel AI SDK
 
 Provide:
+
 - API endpoint URL: `/api/chat`
 - Expected request format
 - Streaming response format
@@ -320,6 +333,7 @@ Provide:
 ## Dependencies
 
 Already installed in Story 1.1:
+
 - `openai` (OpenAI SDK)
 - `ai` (Vercel AI SDK)
 
@@ -334,6 +348,7 @@ Already installed in Story 1.1:
 - Can test with curl or Postman before frontend ready
 
 ### Test with curl:
+
 ```bash
 curl -X POST http://localhost:3000/api/chat \
   -H "Content-Type: application/json" \

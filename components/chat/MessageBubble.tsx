@@ -22,7 +22,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   // Extract text from parts array
   const messageText = message.parts
     .filter((part) => part.type === 'text')
-    .map((part) => 'text' in part ? part.text : '')
+    .map((part) => ('text' in part ? part.text : ''))
     .join('');
 
   // Extract image from parts array
@@ -74,7 +74,12 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         {/* AI message caret (left side) - pointing right toward the message */}
         {!isUser && (
           <div className="flex-shrink-0 mt-3">
-            <svg width="12" height="12" viewBox="0 0 12 12" className="text-white dark:text-gray-800">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              className="text-white dark:text-gray-800"
+            >
               <path d="M0 0 L0 12 L12 6 Z" fill="currentColor" />
             </svg>
           </div>
@@ -105,15 +110,15 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                   isSpeaking && !isPaused
                     ? t('pauseSpeechAriaLabel')
                     : isPaused
-                    ? t('resumeSpeechAriaLabel')
-                    : t('readAloudAriaLabel')
+                      ? t('resumeSpeechAriaLabel')
+                      : t('readAloudAriaLabel')
                 }
                 title={
                   isSpeaking && !isPaused
                     ? t('pauseSpeech')
                     : isPaused
-                    ? t('resumeSpeech')
-                    : t('readAloud')
+                      ? t('resumeSpeech')
+                      : t('readAloud')
                 }
               >
                 {isSpeaking && !isPaused ? (
@@ -178,46 +183,48 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                   ? 'bg-white/10 hover:bg-white/20 text-white'
                   : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300'
               } ${
-                isCopied ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100 md:opacity-0 sm:opacity-100'
+                isCopied
+                  ? 'opacity-100'
+                  : 'opacity-0 md:group-hover:opacity-100 md:opacity-0 sm:opacity-100'
               } focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1`}
               aria-label={isCopied ? t('copiedAriaLabel') : t('copyMessageAriaLabel')}
               title={isCopied ? t('copiedTitle') : t('copyMessage')}
             >
-            {isCopied ? (
-              // Checkmark icon for "Copied!" state
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="w-4 h-4"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            ) : (
-              // Clipboard icon for normal state
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="w-4 h-4"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M15.988 3.012A2.25 2.25 0 0118 5.25v6.5A2.25 2.25 0 0115.75 14H13.5V7A2.5 2.5 0 0011 4.5H8.128a2.252 2.252 0 011.884-1.488A2.25 2.25 0 0112.25 1h1.5a2.25 2.25 0 012.238 2.012zM11.5 3.25a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v.25h-3v-.25z"
-                  clipRule="evenodd"
-                />
-                <path
-                  fillRule="evenodd"
-                  d="M2 7a1 1 0 011-1h8a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V7zm2 3.25a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zm0 3.5a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            )}
-          </button>
+              {isCopied ? (
+                // Checkmark icon for "Copied!" state
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              ) : (
+                // Clipboard icon for normal state
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M15.988 3.012A2.25 2.25 0 0118 5.25v6.5A2.25 2.25 0 0115.75 14H13.5V7A2.5 2.5 0 0011 4.5H8.128a2.252 2.252 0 011.884-1.488A2.25 2.25 0 0112.25 1h1.5a2.25 2.25 0 012.238 2.012zM11.5 3.25a.75.75 0 01.75-.75h1.5a.75.75 0 01.75.75v.25h-3v-.25z"
+                    clipRule="evenodd"
+                  />
+                  <path
+                    fillRule="evenodd"
+                    d="M2 7a1 1 0 011-1h8a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V7zm2 3.25a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75zm0 3.5a.75.75 0 01.75-.75h4.5a.75.75 0 010 1.5h-4.5a.75.75 0 01-.75-.75z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              )}
+            </button>
           </div>
 
           {/* Image attachment if present */}
@@ -243,9 +250,11 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           )}
 
           {/* Message content */}
-          <div className={`text-sm sm:text-base leading-relaxed pb-2 ${
-            isUser ? 'text-white' : 'text-blue-700 dark:text-blue-400'
-          }`}>
+          <div
+            className={`text-sm sm:text-base leading-relaxed pb-2 ${
+              isUser ? 'text-white' : 'text-blue-700 dark:text-blue-400'
+            }`}
+          >
             <MathRenderer content={messageText} />
           </div>
         </div>
@@ -262,10 +271,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
       {/* Image enlargement modal */}
       {imageUrl && isImageModalOpen && (
-        <ImageModal
-          imageUrl={imageUrl}
-          onClose={() => setIsImageModalOpen(false)}
-        />
+        <ImageModal imageUrl={imageUrl} onClose={() => setIsImageModalOpen(false)} />
       )}
     </div>
   );

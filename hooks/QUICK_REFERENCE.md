@@ -10,12 +10,12 @@ import { useVoiceRecognition } from '@/hooks/useVoiceRecognition';
 
 ```typescript
 const {
-  transcript,      // string - Current transcription
-  isListening,     // boolean - Recording status
-  isSupported,     // boolean - Browser support
-  error,           // string | null - Error message
-  startListening,  // () => void - Start recording
-  stopListening,   // () => void - Stop recording
+  transcript, // string - Current transcription
+  isListening, // boolean - Recording status
+  isSupported, // boolean - Browser support
+  error, // string | null - Error message
+  startListening, // () => void - Start recording
+  stopListening, // () => void - Stop recording
   resetTranscript, // () => void - Clear transcript
 } = useVoiceRecognition();
 ```
@@ -24,24 +24,24 @@ const {
 
 ```typescript
 useVoiceRecognition({
-  lang: 'en-US',           // Language code (BCP 47)
-  continuous: true,        // Keep listening after pause
-  interimResults: true,    // Show real-time results
-  maxAlternatives: 1,      // Number of alternatives
+  lang: 'en-US', // Language code (BCP 47)
+  continuous: true, // Keep listening after pause
+  interimResults: true, // Show real-time results
+  maxAlternatives: 1, // Number of alternatives
 });
 ```
 
 ## Common Languages
 
-| Code | Language |
-|------|----------|
+| Code    | Language     |
+| ------- | ------------ |
 | `en-US` | English (US) |
 | `en-GB` | English (UK) |
-| `es-ES` | Spanish |
-| `fr-FR` | French |
-| `de-DE` | German |
-| `zh-CN` | Chinese |
-| `ja-JP` | Japanese |
+| `es-ES` | Spanish      |
+| `fr-FR` | French       |
+| `de-DE` | German       |
+| `zh-CN` | Chinese      |
+| `ja-JP` | Japanese     |
 
 ## Browser Support
 
@@ -50,12 +50,12 @@ useVoiceRecognition({
 
 ## Error Messages
 
-| Error | Meaning |
-|-------|---------|
-| `not-allowed` | Microphone permission denied |
-| `no-speech` | No speech detected |
-| `network` | Network error |
-| `audio-capture` | No microphone found |
+| Error           | Meaning                      |
+| --------------- | ---------------------------- |
+| `not-allowed`   | Microphone permission denied |
+| `no-speech`     | No speech detected           |
+| `network`       | Network error                |
+| `audio-capture` | No microphone found          |
 
 ## Minimal Example
 
@@ -103,6 +103,7 @@ useEffect(() => {
 ## Testing
 
 Import test component:
+
 ```typescript
 import { VoiceRecognitionTest } from '@/hooks/useVoiceRecognition.test';
 
@@ -125,16 +126,17 @@ import { VoiceRecognitionTest } from '@/hooks/useVoiceRecognition.test';
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `useVoiceRecognition.ts` | Main hook (307 lines) |
-| `useVoiceRecognition.example.tsx` | 5 usage examples |
-| `useVoiceRecognition.test.tsx` | Interactive test component |
-| `README.md` | Full documentation |
+| File                              | Purpose                    |
+| --------------------------------- | -------------------------- |
+| `useVoiceRecognition.ts`          | Main hook (307 lines)      |
+| `useVoiceRecognition.example.tsx` | 5 usage examples           |
+| `useVoiceRecognition.test.tsx`    | Interactive test component |
+| `README.md`                       | Full documentation         |
 
 ## Common Patterns
 
 ### Visual Feedback
+
 ```typescript
 <button className={isListening ? 'animate-pulse bg-red-500' : 'bg-blue-500'}>
   {isListening ? '🎤 Listening...' : '🎤 Start'}
@@ -142,6 +144,7 @@ import { VoiceRecognitionTest } from '@/hooks/useVoiceRecognition.test';
 ```
 
 ### Auto-stop After Silence
+
 ```typescript
 useEffect(() => {
   if (!isListening) return;
@@ -153,6 +156,7 @@ useEffect(() => {
 ```
 
 ### Multi-language Selector
+
 ```typescript
 const [lang, setLang] = useState('en-US');
 const { transcript } = useVoiceRecognition({ lang });

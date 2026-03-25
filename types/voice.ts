@@ -40,18 +40,18 @@ export const RECOGNITION_LANGUAGES = [
  * Used to sync UI language with voice recognition and TTS
  */
 export const UI_LANG_TO_SPEECH_LANG: Record<string, string> = {
-  'en': 'en-US',
-  'es': 'es-ES',
-  'fr': 'fr-FR',
-  'de': 'de-DE',
-  'zh': 'zh-CN',
-  'ja': 'ja-JP',
-  'it': 'it-IT',
-  'pt': 'pt-BR',
-  'ko': 'ko-KR',
-  'ru': 'ru-RU',
-  'ar': 'ar-SA',
-  'hi': 'hi-IN',
+  en: 'en-US',
+  es: 'es-ES',
+  fr: 'fr-FR',
+  de: 'de-DE',
+  zh: 'zh-CN',
+  ja: 'ja-JP',
+  it: 'it-IT',
+  pt: 'pt-BR',
+  ko: 'ko-KR',
+  ru: 'ru-RU',
+  ar: 'ar-SA',
+  hi: 'hi-IN',
 };
 
 /**

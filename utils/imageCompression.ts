@@ -20,10 +20,7 @@ interface CompressionOptions {
  * @param options - Compression options
  * @returns Promise that resolves to compressed File
  */
-export async function compressImage(
-  file: File,
-  options: CompressionOptions = {}
-): Promise<File> {
+export async function compressImage(file: File, options: CompressionOptions = {}): Promise<File> {
   const {
     maxWidth = MAX_WIDTH,
     maxHeight = MAX_HEIGHT,
@@ -40,12 +37,7 @@ export async function compressImage(
   const image = await loadImage(file);
 
   // Calculate new dimensions maintaining aspect ratio
-  const { width, height } = calculateDimensions(
-    image.width,
-    image.height,
-    maxWidth,
-    maxHeight
-  );
+  const { width, height } = calculateDimensions(image.width, image.height, maxWidth, maxHeight);
 
   // Create canvas and draw resized image
   const canvas = document.createElement('canvas');
@@ -63,9 +55,8 @@ export async function compressImage(
   ctx.drawImage(image, 0, 0, width, height);
 
   // Determine output format - use original if PNG/WebP, otherwise JPEG
-  const outputType = file.type === 'image/png' || file.type === 'image/webp'
-    ? file.type
-    : 'image/jpeg';
+  const outputType =
+    file.type === 'image/png' || file.type === 'image/webp' ? file.type : 'image/jpeg';
 
   // Convert to blob with compression
   let compressedBlob = await canvasToBlob(canvas, outputType, quality);

@@ -58,12 +58,12 @@ export function HintButton({
   const buttonText = isLoading
     ? t('loadingHint')
     : hasHints && !isHintOpen
-    ? 'View hints'
-    : isMaxLevel && isHintOpen
-    ? 'Close hints'
-    : isMaxLevel
-    ? 'View hints'
-    : t('needHint');
+      ? 'View hints'
+      : isMaxLevel && isHintOpen
+        ? 'Close hints'
+        : isMaxLevel
+          ? 'View hints'
+          : t('needHint');
 
   return (
     <button

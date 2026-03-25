@@ -33,6 +33,7 @@
 ## Technical Tasks
 
 ### 1. Initialize Next.js Project
+
 ```bash
 # Option 1: From scratch
 npx create-next-app@latest gandalf --typescript --tailwind --app --eslint
@@ -44,12 +45,14 @@ cd gandalf
 ```
 
 ### 2. Install Core Dependencies
+
 ```bash
 npm install ai openai
 npm install -D @types/node typescript
 ```
 
 ### 3. Configure TypeScript (tsconfig.json)
+
 ```json
 {
   "compilerOptions": {
@@ -81,6 +84,7 @@ npm install -D @types/node typescript
 ```
 
 ### 4. Configure ESLint (.eslintrc.json)
+
 ```json
 {
   "extends": [
@@ -96,6 +100,7 @@ npm install -D @types/node typescript
 ```
 
 ### 5. Configure Prettier (.prettierrc)
+
 ```json
 {
   "semi": true,
@@ -108,6 +113,7 @@ npm install -D @types/node typescript
 ```
 
 ### 6. Create .gitignore
+
 ```
 # Dependencies
 node_modules/
@@ -207,10 +213,12 @@ next-env.d.ts
 ## Handoff to Next Story
 
 After completing this story:
+
 - Story 1.2 (UI Framework Setup) can begin
 - Story 1.3 (Project Structure) can begin in parallel
 
 Provide to next developers:
+
 - Repository URL/location
 - Confirmation that `npm run dev` works
 - Confirmation that TypeScript strict mode is enabled

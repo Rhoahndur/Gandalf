@@ -108,9 +108,7 @@ export function useHints({
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => null);
-          throw new Error(
-            errorData?.error || `Failed to fetch hint (${response.status})`
-          );
+          throw new Error(errorData?.error || `Failed to fetch hint (${response.status})`);
         }
 
         const data: HintResponse = await response.json();
@@ -133,14 +131,13 @@ export function useHints({
         setViewingLevel(data.level);
 
         // Add to history
-        setHintHistory(prev => new Map(prev).set(data.level, data.hint));
+        setHintHistory((prev) => new Map(prev).set(data.level, data.hint));
 
         // Update the currentLevel in localStorage
         saveHintState(conversationId, problemId, { currentLevel: data.level });
       } catch (err) {
         console.error('Error fetching hint:', err);
-        const errorMessage =
-          err instanceof Error ? err.message : 'An unknown error occurred';
+        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
         setError(errorMessage);
       } finally {
         setIsLoading(false);
@@ -228,8 +225,12 @@ export function useHints({
   }, [conversationId, problemId]);
 
   // Calculate derived state
-  const hasPrevious = viewingLevel !== null && viewingLevel > 0 && hintHistory.has((viewingLevel - 1) as HintLevel);
-  const hasNextInHistory = viewingLevel !== null && viewingLevel < currentLevel && hintHistory.has((viewingLevel + 1) as HintLevel);
+  const hasPrevious =
+    viewingLevel !== null && viewingLevel > 0 && hintHistory.has((viewingLevel - 1) as HintLevel);
+  const hasNextInHistory =
+    viewingLevel !== null &&
+    viewingLevel < currentLevel &&
+    hintHistory.has((viewingLevel + 1) as HintLevel);
   const canRequestNew = currentLevel < 4;
 
   return {

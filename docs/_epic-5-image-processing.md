@@ -31,6 +31,7 @@ Enable students to upload math problem images via screenshot or photo. Implement
 ## User Stories
 
 ### Story 5.1: Image Upload UI & Validation
+
 **File:** `docs/stories/story-5.1-image-upload-ui.md`
 **Estimated Time:** 3 hours
 **Agent Assignment:** Frontend DEV Agent #1
@@ -41,6 +42,7 @@ Add image upload button to ChatInput, implement drag-and-drop zone, create Image
 ---
 
 ### Story 5.2: Vision API Integration & OCR
+
 **File:** `docs/stories/story-5.2-vision-ocr.md`
 **Estimated Time:** 5 hours
 **Agent Assignment:** Backend DEV Agent #2 (parallel)
@@ -53,12 +55,14 @@ Integrate OpenAI Vision API (GPT-4 Vision), update API route to handle multimoda
 ## Technical Specifications
 
 ### File Handling
+
 - **Accepted Formats:** .jpg, .jpeg, .png, .webp
 - **Max File Size:** 5MB (before compression)
 - **Target Compressed Size:** <1MB
 - **Compression Library:** browser-image-compression
 
 ### Component Structure
+
 ```
 components/chat/
   ├── ImagePreview.tsx       # Preview selected image
@@ -77,6 +81,7 @@ prompts/
 ```
 
 ### Multimodal Message Format
+
 ```typescript
 {
   role: "user",
@@ -96,35 +101,39 @@ prompts/
 ```
 
 ### Vision Prompt Template
+
 ```markdown
 You are analyzing a math problem from an image.
 
 TASK:
+
 1. Extract all mathematical expressions and equations
 2. Convert to plain text or LaTeX notation
 3. Preserve problem structure and context
 4. If handwritten, interpret carefully
 
 OUTPUT FORMAT:
+
 - Use LaTeX for equations: $2x + 5 = 13$
 - Preserve problem numbering/labels
 - Include all relevant context
 
 If unclear or cannot read:
+
 - Request clearer photo
 - Ask specific clarifying questions
 ```
 
 ### API Route Updates
+
 ```typescript
 // app/api/chat/route.ts
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
   // Detect if any message contains images
-  const hasImages = messages.some(m =>
-    Array.isArray(m.content) &&
-    m.content.some(c => c.type === 'image_url')
+  const hasImages = messages.some(
+    (m) => Array.isArray(m.content) && m.content.some((c) => c.type === 'image_url')
   );
 
   const model = hasImages ? 'gpt-4-vision-preview' : 'gpt-4-turbo';
@@ -138,6 +147,7 @@ export async function POST(req: Request) {
 ## Testing Checklist
 
 ### Image Upload
+
 - [ ] File picker works on desktop
 - [ ] File picker works on mobile
 - [ ] Drag-and-drop works
@@ -148,6 +158,7 @@ export async function POST(req: Request) {
 - [ ] Remove image button works
 
 ### OCR Accuracy
+
 - [ ] Printed simple equation: "2x + 5 = 13" (95%+ accuracy)
 - [ ] Printed complex equation: "x² - 5x + 6 = 0" (95%+ accuracy)
 - [ ] Printed word problem (90%+ accuracy)
@@ -156,6 +167,7 @@ export async function POST(req: Request) {
 - [ ] Geometry diagram with labels (70%+ accuracy)
 
 ### Error Handling
+
 - [ ] Blurry image → request clearer photo
 - [ ] No math visible → polite error message
 - [ ] Upside-down image → ask to rotate
@@ -163,12 +175,14 @@ export async function POST(req: Request) {
 - [ ] Network error → graceful retry option
 
 ### Integration
+
 - [ ] Extracted text appears in conversation
 - [ ] Socratic dialogue continues after extraction
 - [ ] Image thumbnail shows in history
 - [ ] Can click image to view full size
 
 ### Mobile Experience
+
 - [ ] Camera access works on mobile
 - [ ] Photo library access works
 - [ ] Upload speed reasonable on 4G
@@ -179,6 +193,7 @@ export async function POST(req: Request) {
 ## Files to Create/Modify
 
 ### New Files
+
 - `components/chat/ImagePreview.tsx`
 - `utils/fileValidator.ts`
 - `utils/imageCompression.ts`
@@ -187,12 +202,14 @@ export async function POST(req: Request) {
 - `prompts/visionPrompt.ts`
 
 ### Modified Files
+
 - `components/chat/ChatInput.tsx` (add upload button)
 - `components/chat/MessageBubble.tsx` (display images)
 - `app/api/chat/route.ts` (handle multimodal messages)
 - `types/conversation.ts` (extend message type)
 
 ### New Dependencies
+
 ```json
 {
   "browser-image-compression": "^latest"
@@ -218,14 +235,14 @@ export async function POST(req: Request) {
 
 ## OCR Quality Benchmarks
 
-| Image Type | Target Accuracy | Notes |
-|------------|----------------|-------|
-| Printed simple equations | 95-100% | "2x + 5 = 13" |
-| Printed complex notation | 90-95% | Fractions, exponents, roots |
-| Printed word problems | 85-95% | Text + equations |
-| Clear handwritten | 75-85% | Legible writing |
-| Messy handwritten | 60-70% | May need clarification |
-| Geometry diagrams | 70-80% | Labels and dimensions |
+| Image Type               | Target Accuracy | Notes                       |
+| ------------------------ | --------------- | --------------------------- |
+| Printed simple equations | 95-100%         | "2x + 5 = 13"               |
+| Printed complex notation | 90-95%          | Fractions, exponents, roots |
+| Printed word problems    | 85-95%          | Text + equations            |
+| Clear handwritten        | 75-85%          | Legible writing             |
+| Messy handwritten        | 60-70%          | May need clarification      |
+| Geometry diagrams        | 70-80%          | Labels and dimensions       |
 
 ---
 
@@ -250,12 +267,15 @@ export async function POST(req: Request) {
 ## Risk Mitigation
 
 **Medium Risk:** OCR accuracy too low for handwritten problems
+
 - **Mitigation:** Start with printed text, iterate on handwriting, provide manual entry fallback
 
 **Medium Risk:** Large images slow down upload
+
 - **Mitigation:** Aggressive compression, show upload progress
 
 **Low Risk:** Mobile permissions issues
+
 - **Mitigation:** Clear permission requests, fallback options
 
 ---

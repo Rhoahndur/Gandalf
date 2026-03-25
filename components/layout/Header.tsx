@@ -15,7 +15,17 @@ interface HeaderProps {
   showWhiteboard?: boolean;
 }
 
-export function Header({ onToggleSidebar, conversationTitle, onOpenSettings, onNewChat, onShowShortcuts, onToggleMathKeyboard, showMathKeyboard, onToggleWhiteboard, showWhiteboard }: HeaderProps) {
+export function Header({
+  onToggleSidebar,
+  conversationTitle,
+  onOpenSettings,
+  onNewChat,
+  onShowShortcuts,
+  onToggleMathKeyboard,
+  showMathKeyboard,
+  onToggleWhiteboard,
+  showWhiteboard,
+}: HeaderProps) {
   const t = useTranslations('common.header');
   return (
     <header className="sticky top-0 z-10 px-4 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md transition-colors duration-200">
@@ -27,7 +37,9 @@ export function Header({ onToggleSidebar, conversationTitle, onOpenSettings, onN
           aria-label={t('historyAriaLabel')}
           title={`${t('history')} (Ctrl/Cmd+H)`}
         >
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">📜 {t('history')}</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            📜 {t('history')}
+          </span>
         </button>
 
         {/* Title Section */}
@@ -35,15 +47,29 @@ export function Header({ onToggleSidebar, conversationTitle, onOpenSettings, onN
           <div className="flex items-center gap-2">
             {/* Logo/Icon */}
             <div className="hidden sm:flex w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg items-center justify-center flex-shrink-0 shadow-sm">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                />
               </svg>
             </div>
 
             {/* Title and subtitle */}
             <div className="flex-1 min-w-0">
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white truncate">
-                {t('appTitle')} <span className="text-gray-500 dark:text-gray-400 font-normal">({t('appSubtitle')})</span>
+                {t('appTitle')}{' '}
+                <span className="text-gray-500 dark:text-gray-400 font-normal">
+                  ({t('appSubtitle')})
+                </span>
               </h1>
               {conversationTitle && conversationTitle !== 'New Conversation' && (
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate animate-in fade-in slide-in-from-top-1 duration-300">
@@ -62,7 +88,9 @@ export function Header({ onToggleSidebar, conversationTitle, onOpenSettings, onN
             aria-label={t('newChatAriaLabel')}
             title={`${t('newChat')} (Ctrl/Cmd+N)`}
           >
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">➕ {t('newChat')}</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              ➕ {t('newChat')}
+            </span>
           </button>
         )}
 
@@ -79,11 +107,15 @@ export function Header({ onToggleSidebar, conversationTitle, onOpenSettings, onN
             aria-pressed={showMathKeyboard}
             title={showMathKeyboard ? t('mathKeyboardHide') : t('mathKeyboardShow')}
           >
-            <span className={`text-sm font-medium ${
-              showMathKeyboard
-                ? 'text-blue-700 dark:text-blue-400'
-                : 'text-gray-700 dark:text-gray-300'
-            }`}>∑ {t('mathKeyboard')}</span>
+            <span
+              className={`text-sm font-medium ${
+                showMathKeyboard
+                  ? 'text-blue-700 dark:text-blue-400'
+                  : 'text-gray-700 dark:text-gray-300'
+              }`}
+            >
+              ∑ {t('mathKeyboard')}
+            </span>
           </button>
         )}
 
@@ -157,7 +189,9 @@ export function Header({ onToggleSidebar, conversationTitle, onOpenSettings, onN
             aria-label={t('settingsAriaLabel')}
             title={t('settings')}
           >
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">⚙️ {t('settings')}</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              ⚙️ {t('settings')}
+            </span>
           </button>
         )}
       </div>

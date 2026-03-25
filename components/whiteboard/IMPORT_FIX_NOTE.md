@@ -1,7 +1,9 @@
 # Import Path Fix Note
 
 ## Issue
+
 The project's linter/formatter is automatically changing Excalidraw import paths between different formats:
+
 - `'@excalidraw/excalidraw/types'` (correct, package.json exports)
 - `'@excalidraw/excalidraw/types/types'` (incorrect, direct path)
 - `'@excalidraw/excalidraw/types/element/types'` (incorrect, direct path)
@@ -11,7 +13,12 @@ The project's linter/formatter is automatically changing Excalidraw import paths
 According to the Excalidraw package.json exports configuration, the correct import is:
 
 ```typescript
-import type { ExcalidrawElement, AppState, BinaryFiles, ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types';
+import type {
+  ExcalidrawElement,
+  AppState,
+  BinaryFiles,
+  ExcalidrawImperativeAPI,
+} from '@excalidraw/excalidraw/types';
 ```
 
 ## Files That Need This Import
@@ -29,6 +36,7 @@ All whiteboard-related files should use the correct import:
 ## Solution
 
 ### Option 1: Fix Linter Configuration
+
 Check `.eslintrc.json` or `eslint.config.js` and disable auto-fixing for import paths:
 
 ```json
@@ -41,6 +49,7 @@ Check `.eslintrc.json` or `eslint.config.js` and disable auto-fixing for import 
 ```
 
 ### Option 2: Manual Fix After Linting
+
 After the linter runs, manually replace all occurrences:
 
 ```bash
@@ -53,6 +62,7 @@ find components/ hooks/ utils/ -type f -name "*.tsx" -o -name "*.ts" | xargs sed
 ```
 
 ### Option 3: TypeScript Path Mapping
+
 Add to `tsconfig.json`:
 
 ```json
@@ -60,7 +70,9 @@ Add to `tsconfig.json`:
   "compilerOptions": {
     "moduleResolution": "bundler",
     "paths": {
-      "@excalidraw/excalidraw/types": ["./node_modules/@excalidraw/excalidraw/dist/types/excalidraw/index.d.ts"]
+      "@excalidraw/excalidraw/types": [
+        "./node_modules/@excalidraw/excalidraw/dist/types/excalidraw/index.d.ts"
+      ]
     }
   }
 }
@@ -85,6 +97,7 @@ The Excalidraw package uses conditional exports in package.json:
 ```
 
 This means:
+
 - ✅ `@excalidraw/excalidraw/types` - Resolves via package exports
 - ❌ `@excalidraw/excalidraw/types/types` - Direct path, not in exports
 - ❌ `@excalidraw/excalidraw/types/element/types` - Direct path, not in exports

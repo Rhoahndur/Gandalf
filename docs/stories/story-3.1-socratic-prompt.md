@@ -43,7 +43,7 @@ This is the **MOST IMPORTANT** story in the entire project. The Socratic method 
 
 ## Technical Implementation
 
-### File:** `prompts/socraticPrompt.ts`
+### File:\*\* `prompts/socraticPrompt.ts`
 
 ```typescript
 export const SOCRATIC_SYSTEM_PROMPT = `You are a patient, encouraging math tutor using the Socratic method to guide students.
@@ -248,7 +248,7 @@ export function getSocraticPrompt(context?: {
 
 ## Integration with API Route
 
-### Update:** `app/api/chat/route.ts`
+### Update:\*\* `app/api/chat/route.ts`
 
 ```typescript
 import { getSocraticPrompt } from '@/prompts/socraticPrompt';
@@ -316,6 +316,7 @@ Test each problem and check for forbidden phrases:
 ### Forbidden Phrase Detector
 
 Search all test responses for:
+
 - "The answer is"
 - "The solution is"
 - "You need to"
@@ -331,21 +332,25 @@ Search all test responses for:
 This prompt will require **multiple iterations**:
 
 ### Iteration 1: Initial Draft (1 hour)
+
 - Write first version
 - Test with 3 problems
 - Identify violations
 
 ### Iteration 2: Refinement (1 hour)
+
 - Fix identified violations
 - Add more explicit rules
 - Test with 5 problems
 
 ### Iteration 3: Edge Cases (1 hour)
+
 - Test "stuck student" scenario
 - Test off-topic questions
 - Test demand for direct answer
 
 ### Iteration 4: Final Polish (1 hour)
+
 - Review all test conversations
 - Ensure consistent personality
 - Verify hint escalation
@@ -354,13 +359,13 @@ This prompt will require **multiple iterations**:
 
 ## Success Metrics
 
-| Metric | Target | Critical? |
-|--------|--------|-----------|
-| Direct answers given | 0 | ✅ YES |
-| Responses as questions | 90%+ | ✅ YES |
-| Hints after 2+ stuck turns | 100% | ✅ YES |
-| Encouraging language used | 80%+ | ⚠️ Important |
-| Student reaches answer | 90%+ | ⚠️ Important |
+| Metric                     | Target | Critical?    |
+| -------------------------- | ------ | ------------ |
+| Direct answers given       | 0      | ✅ YES       |
+| Responses as questions     | 90%+   | ✅ YES       |
+| Hints after 2+ stuck turns | 100%   | ✅ YES       |
+| Encouraging language used  | 80%+   | ⚠️ Important |
+| Student reaches answer     | 90%+   | ⚠️ Important |
 
 ---
 
@@ -369,6 +374,7 @@ This prompt will require **multiple iterations**:
 ### Create: `docs/PROMPT_ENGINEERING.md`
 
 Document:
+
 - Design rationale
 - Iteration history
 - What worked / didn't work
@@ -391,6 +397,7 @@ Document:
 ## Handoff Notes
 
 After this story:
+
 - API route uses Socratic prompt
 - Testing can begin in Story 3.3
 - Frontend will automatically use new prompt

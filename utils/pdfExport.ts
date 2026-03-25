@@ -66,7 +66,7 @@ export async function exportConversationToPDF(conversation: Conversation): Promi
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   const margin = 20;
-  const contentWidth = pageWidth - (margin * 2);
+  const contentWidth = pageWidth - margin * 2;
   let yPosition = margin;
 
   // Helper function to add new page if needed
@@ -133,98 +133,107 @@ export async function exportConversationToPDF(conversation: Conversation): Promi
       // Extract text content from parts
       const textParts = message.parts
         .filter((part) => part.type === 'text')
-        .map((part) => 'text' in part ? part.text : '')
+        .map((part) => ('text' in part ? part.text : ''))
         .join('');
 
-    // Find image if present
-    const imagePart = message.parts.find((part) => part.type === 'file' && 'url' in part);
-    const imageUrl = imagePart && 'url' in imagePart ? (imagePart as any).url : null;
+      // Find image if present
+      const imagePart = message.parts.find((part) => part.type === 'file' && 'url' in part);
+      const imageUrl = imagePart && 'url' in imagePart ? (imagePart as any).url : null;
 
-    // Add role label
-    checkPageBreak(15);
-    pdf.setFontSize(11);
-    pdf.setFont('helvetica', 'bold');
+      // Add role label
+      checkPageBreak(15);
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'bold');
 
-    if (isUser) {
-      pdf.setTextColor(37, 99, 235); // Blue for user
-      pdf.text('You:', margin, yPosition);
-    } else {
-      pdf.setTextColor(79, 70, 229); // Indigo for AI
-      pdf.text('AI Tutor:', margin, yPosition);
-    }
-    yPosition += 6;
-
-    // Add message content
-    pdf.setFont('helvetica', 'normal');
-    pdf.setTextColor(0, 0, 0);
-    pdf.setFontSize(10);
-
-    // Add image if present
-    if (imageUrl) {
-      try {
-        // Load image to get its natural dimensions
-        const img = new Image();
-        img.src = imageUrl;
-
-        // Wait for image to load to get dimensions
-        await new Promise<void>((resolve, reject) => {
-          img.onload = () => resolve();
-          img.onerror = () => reject(new Error('Failed to load image'));
-        });
-
-        // Calculate dimensions while maintaining aspect ratio
-        const maxWidth = contentWidth - 10; // Leave some margin
-        const maxHeight = 100; // Max height in mm (about 1/3 of page)
-
-        const aspectRatio = img.width / img.height;
-        let imageWidth = maxWidth;
-        let imageHeight = imageWidth / aspectRatio;
-
-        // If height exceeds max, scale down based on height instead
-        if (imageHeight > maxHeight) {
-          imageHeight = maxHeight;
-          imageWidth = imageHeight * aspectRatio;
-        }
-
-        checkPageBreak(imageHeight + 10);
-
-        // Add image to PDF with proper aspect ratio
-        pdf.addImage(imageUrl, 'JPEG', margin + 5, yPosition, imageWidth, imageHeight, undefined, 'FAST');
-        yPosition += imageHeight + 5;
-      } catch (error) {
-        console.error('Failed to add image to PDF:', error);
-        // Fallback to text indicator
-        pdf.setFont('helvetica', 'italic');
-        pdf.setTextColor(100, 100, 100);
-        pdf.text('[Image attached - could not embed]', margin + 5, yPosition);
-        yPosition += 5;
-        pdf.setFont('helvetica', 'normal');
-        pdf.setTextColor(0, 0, 0);
+      if (isUser) {
+        pdf.setTextColor(37, 99, 235); // Blue for user
+        pdf.text('You:', margin, yPosition);
+      } else {
+        pdf.setTextColor(79, 70, 229); // Indigo for AI
+        pdf.text('AI Tutor:', margin, yPosition);
       }
-    }
+      yPosition += 6;
 
-    if (textParts.trim()) {
-      // Convert LaTeX to readable plain text
-      const cleanedText = latexToPlainText(textParts);
+      // Add message content
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFontSize(10);
 
-      const messageLines = wrapText(cleanedText, contentWidth - 5);
+      // Add image if present
+      if (imageUrl) {
+        try {
+          // Load image to get its natural dimensions
+          const img = new Image();
+          img.src = imageUrl;
 
-      messageLines.forEach((line) => {
-        checkPageBreak(5);
-        pdf.text(line, margin + 5, yPosition);
-        yPosition += 5;
-      });
-    }
+          // Wait for image to load to get dimensions
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => resolve();
+            img.onerror = () => reject(new Error('Failed to load image'));
+          });
 
-    yPosition += 5; // Space between messages
+          // Calculate dimensions while maintaining aspect ratio
+          const maxWidth = contentWidth - 10; // Leave some margin
+          const maxHeight = 100; // Max height in mm (about 1/3 of page)
 
-    // Add separator for readability
-    if (i < conversation.messages.length - 1) {
-      checkPageBreak(3);
-      pdf.setDrawColor(230, 230, 230);
-      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
-      yPosition += 8;
-    }
+          const aspectRatio = img.width / img.height;
+          let imageWidth = maxWidth;
+          let imageHeight = imageWidth / aspectRatio;
+
+          // If height exceeds max, scale down based on height instead
+          if (imageHeight > maxHeight) {
+            imageHeight = maxHeight;
+            imageWidth = imageHeight * aspectRatio;
+          }
+
+          checkPageBreak(imageHeight + 10);
+
+          // Add image to PDF with proper aspect ratio
+          pdf.addImage(
+            imageUrl,
+            'JPEG',
+            margin + 5,
+            yPosition,
+            imageWidth,
+            imageHeight,
+            undefined,
+            'FAST'
+          );
+          yPosition += imageHeight + 5;
+        } catch (error) {
+          console.error('Failed to add image to PDF:', error);
+          // Fallback to text indicator
+          pdf.setFont('helvetica', 'italic');
+          pdf.setTextColor(100, 100, 100);
+          pdf.text('[Image attached - could not embed]', margin + 5, yPosition);
+          yPosition += 5;
+          pdf.setFont('helvetica', 'normal');
+          pdf.setTextColor(0, 0, 0);
+        }
+      }
+
+      if (textParts.trim()) {
+        // Convert LaTeX to readable plain text
+        const cleanedText = latexToPlainText(textParts);
+
+        const messageLines = wrapText(cleanedText, contentWidth - 5);
+
+        messageLines.forEach((line) => {
+          checkPageBreak(5);
+          pdf.text(line, margin + 5, yPosition);
+          yPosition += 5;
+        });
+      }
+
+      yPosition += 5; // Space between messages
+
+      // Add separator for readability
+      if (i < conversation.messages.length - 1) {
+        checkPageBreak(3);
+        pdf.setDrawColor(230, 230, 230);
+        pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+        yPosition += 8;
+      }
     } catch (error) {
       // Continue with next message instead of failing entirely
       console.error(`Error processing message ${i}:`, error);
@@ -248,10 +257,12 @@ export async function exportConversationToPDF(conversation: Conversation): Promi
 
       const handle = await (window as any).showSaveFilePicker({
         suggestedName: 'gandalf_math_chat.pdf',
-        types: [{
-          description: 'PDF Files',
-          accept: { 'application/pdf': ['.pdf'] },
-        }],
+        types: [
+          {
+            description: 'PDF Files',
+            accept: { 'application/pdf': ['.pdf'] },
+          },
+        ],
       });
 
       const writable = await handle.createWritable();

@@ -100,7 +100,7 @@ export function KeyboardShortcutsHelp({ isOpen, onClose }: KeyboardShortcutsHelp
   ];
 
   // Group shortcuts by category
-  const categories = Array.from(new Set(shortcuts.map(s => s.category || 'Other')));
+  const categories = Array.from(new Set(shortcuts.map((s) => s.category || 'Other')));
 
   return (
     <>
@@ -149,9 +149,7 @@ export function KeyboardShortcutsHelp({ isOpen, onClose }: KeyboardShortcutsHelp
                   >
                     {t('title')}
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {t('subtitle')}
-                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('subtitle')}</p>
                 </div>
               </div>
               <button
@@ -180,7 +178,9 @@ export function KeyboardShortcutsHelp({ isOpen, onClose }: KeyboardShortcutsHelp
           {/* Content */}
           <div className="overflow-y-auto max-h-[calc(80vh-120px)] p-6">
             {categories.map((category) => {
-              const categoryShortcuts = shortcuts.filter(s => (s.category || 'Other') === category);
+              const categoryShortcuts = shortcuts.filter(
+                (s) => (s.category || 'Other') === category
+              );
 
               return (
                 <div key={category} className="mb-6 last:mb-0">
@@ -223,13 +223,27 @@ export function KeyboardShortcutsHelp({ isOpen, onClose }: KeyboardShortcutsHelp
             <div className="space-y-3">
               {/* File Upload Info */}
               <div className="flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 <div className="text-sm">
-                  <p className="font-medium text-blue-900 dark:text-blue-300 mb-1">{t('imageUploadTitle')}</p>
+                  <p className="font-medium text-blue-900 dark:text-blue-300 mb-1">
+                    {t('imageUploadTitle')}
+                  </p>
                   <p className="text-blue-700 dark:text-blue-400">
-                    {t('imageUploadFormats')} <span className="font-mono">JPG, PNG, WebP</span> {t('imageUploadMaxSize')}
+                    {t('imageUploadFormats')} <span className="font-mono">JPG, PNG, WebP</span>{' '}
+                    {t('imageUploadMaxSize')}
                   </p>
                   <p className="text-blue-700 dark:text-blue-400 mt-1">
                     {t('imageUploadInstructions', { modKey })}
@@ -242,11 +256,17 @@ export function KeyboardShortcutsHelp({ isOpen, onClose }: KeyboardShortcutsHelp
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span>
-                    {t('platformEnabled', { platform: isMac() ? t('platformMac') : t('platformOther') })}
+                    {t('platformEnabled', {
+                      platform: isMac() ? t('platformMac') : t('platformOther'),
+                    })}
                   </span>
                 </div>
                 <span>
-                  {t('pressEscToClose')} <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">Esc</kbd> {t('toClose')}
+                  {t('pressEscToClose')}{' '}
+                  <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">
+                    Esc
+                  </kbd>{' '}
+                  {t('toClose')}
                 </span>
               </div>
             </div>

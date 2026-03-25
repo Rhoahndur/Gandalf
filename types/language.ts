@@ -11,37 +11,37 @@ export interface LanguageConfig {
 }
 
 export const LANGUAGE_CONFIGS: Record<LanguageCode, LanguageConfig> = {
-  'en': {
+  en: {
     code: 'en',
     name: 'English',
     nativeName: 'English',
     flag: '🇺🇸',
   },
-  'es': {
+  es: {
     code: 'es',
     name: 'Spanish',
     nativeName: 'Español',
     flag: '🇪🇸',
   },
-  'fr': {
+  fr: {
     code: 'fr',
     name: 'French',
     nativeName: 'Français',
     flag: '🇫🇷',
   },
-  'de': {
+  de: {
     code: 'de',
     name: 'German',
     nativeName: 'Deutsch',
     flag: '🇩🇪',
   },
-  'zh': {
+  zh: {
     code: 'zh',
     name: 'Chinese (Simplified)',
     nativeName: '简体中文',
     flag: '🇨🇳',
   },
-  'ja': {
+  ja: {
     code: 'ja',
     name: 'Japanese',
     nativeName: '日本語',

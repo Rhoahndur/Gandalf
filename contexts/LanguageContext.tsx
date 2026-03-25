@@ -31,12 +31,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     try {
       const [common, settings] = await Promise.all([
         import(`@/locales/${lang}/common.json`),
-        import(`@/locales/${lang}/settings.json`)
+        import(`@/locales/${lang}/settings.json`),
       ]);
 
       setMessages({
         common: common.default,
-        settings: settings.default
+        settings: settings.default,
       });
     } catch (error) {
       console.error(`Failed to load messages for language: ${lang}`, error);

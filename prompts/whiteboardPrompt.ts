@@ -105,7 +105,8 @@ ${whiteboardDescription}
  * Suggestions for when to recommend whiteboard use by problem type
  */
 export const WHITEBOARD_SUGGESTIONS_BY_TOPIC: Record<string, string> = {
-  geometry: 'Drawing the shape will help visualize the problem. Can you sketch it on the whiteboard?',
+  geometry:
+    'Drawing the shape will help visualize the problem. Can you sketch it on the whiteboard?',
   area: 'Let me suggest drawing the shape. Can you sketch a rectangle/triangle on the whiteboard?',
   perimeter: 'Would you like to draw the shape first? It often makes finding the perimeter easier.',
   angles: 'Try drawing the angles on the whiteboard so we can see them clearly.',

@@ -30,6 +30,7 @@ Establish the technical foundation for the AI Math Tutor application, including 
 ## User Stories
 
 ### Story 1.1: Next.js Project Initialization
+
 **File:** `docs/stories/story-1.1-nextjs-init.md`
 **Estimated Time:** 1.5 hours
 **Agent Assignment:** DEV Agent #1
@@ -40,6 +41,7 @@ Initialize Next.js 14 project with Vercel AI SDK Chat Template, configure TypeSc
 ---
 
 ### Story 1.2: UI Framework Setup
+
 **File:** `docs/stories/story-1.2-ui-framework.md`
 **Estimated Time:** 1.5 hours
 **Agent Assignment:** DEV Agent #2 (parallel)
@@ -50,6 +52,7 @@ Install and configure Tailwind CSS, integrate shadcn/ui component library, insta
 ---
 
 ### Story 1.3: Project Structure & Configuration
+
 **File:** `docs/stories/story-1.3-project-structure.md`
 **Estimated Time:** 1.5 hours
 **Agent Assignment:** DEV Agent #1
@@ -62,6 +65,7 @@ Create complete folder structure (components, lib, types, prompts, utils, hooks)
 ## Technical Specifications
 
 ### Tech Stack
+
 - **Framework:** Next.js 14 with App Router
 - **Language:** TypeScript (strict mode)
 - **Styling:** Tailwind CSS
@@ -70,6 +74,7 @@ Create complete folder structure (components, lib, types, prompts, utils, hooks)
 - **Package Manager:** npm
 
 ### Folder Structure
+
 ```
 app/
   ├── api/chat/          # API routes
@@ -101,6 +106,7 @@ hooks/
 ```
 
 ### Environment Variables
+
 ```
 OPENAI_API_KEY=your_api_key_here
 ```
@@ -123,6 +129,7 @@ OPENAI_API_KEY=your_api_key_here
 ## Files to Create/Modify
 
 ### New Files
+
 - `package.json`
 - `tsconfig.json`
 - `tailwind.config.js`

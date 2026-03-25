@@ -27,11 +27,7 @@ export function useKeyboardShortcuts({ shortcuts, enabled = true }: UseKeyboardS
 
       // Don't trigger shortcuts when typing in input fields, textareas, or contenteditable elements
       const target = event.target as HTMLElement;
-      if (
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable
-      ) {
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         return;
       }
 
@@ -41,7 +37,9 @@ export function useKeyboardShortcuts({ shortcuts, enabled = true }: UseKeyboardS
 
         // Handle Ctrl/Cmd appropriately for platform
         const ctrlOrCmdMatches = shortcut.ctrlOrCmd
-          ? (isMac() ? event.metaKey : event.ctrlKey)
+          ? isMac()
+            ? event.metaKey
+            : event.ctrlKey
           : true;
 
         // Handle explicit Ctrl key requirement
@@ -104,7 +102,10 @@ export function formatShortcut(shortcut: KeyboardShortcut): string {
   }
 
   // Capitalize first letter of key
-  const key = shortcut.key === 'Escape' ? 'Esc' : shortcut.key.charAt(0).toUpperCase() + shortcut.key.slice(1);
+  const key =
+    shortcut.key === 'Escape'
+      ? 'Esc'
+      : shortcut.key.charAt(0).toUpperCase() + shortcut.key.slice(1);
   parts.push(key);
 
   return parts.join('+');

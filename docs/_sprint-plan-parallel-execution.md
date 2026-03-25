@@ -29,6 +29,7 @@ This sprint plan maximizes parallelization across **4-6 concurrent development a
 ## Sprint Overview
 
 ### Timeline
+
 - **Sprint 0 (Day 0):** Setup & Planning ✓ (Complete)
 - **Sprint 1 (Days 1-2):** Foundation Phase
 - **Sprint 2 (Days 3-5):** Core Features Phase
@@ -36,6 +37,7 @@ This sprint plan maximizes parallelization across **4-6 concurrent development a
 - **Sprint 4 (Days 9-12):** Polish & Launch Phase
 
 ### Total Story Points
+
 - **7 Epics**
 - **~20 User Stories** (key stories documented, others implicit in epics)
 - **40-47 work hours** total
@@ -48,31 +50,37 @@ This sprint plan maximizes parallelization across **4-6 concurrent development a
 ### Agent Team Structure
 
 #### **Agent #1: Frontend UI Specialist**
+
 **Skills:** React, Next.js, Tailwind CSS, UX/UI
 **Primary Responsibility:** Chat interface, components, styling
 **Concurrent Capacity:** 2-3 stories at different stages
 
 #### **Agent #2: Frontend Features Specialist**
+
 **Skills:** React, File handling, Image processing, Client-side logic
 **Primary Responsibility:** Image upload, math rendering, conversation UI
 **Concurrent Capacity:** 2-3 stories
 
 #### **Agent #3: Backend API Specialist**
+
 **Skills:** Next.js API routes, OpenAI SDK, Streaming, Error handling
 **Primary Responsibility:** API integration, OpenAI connection, streaming
 **Concurrent Capacity:** 2-3 stories
 
 #### **Agent #4: Prompt Engineering & Testing Specialist**
+
 **Skills:** LLM prompting, QA, System testing
 **Primary Responsibility:** Socratic prompts, comprehensive testing
 **Concurrent Capacity:** Testing runs in background
 
 #### **Agent #5: Full-Stack Utility (Optional)**
+
 **Skills:** General full-stack, Documentation, DevOps
 **Primary Responsibility:** Storage, persistence, deployment, documentation
 **Concurrent Capacity:** 2 stories
 
 #### **Agent #6: QA & Documentation (Optional)**
+
 **Skills:** Testing, Documentation, Video production
 **Primary Responsibility:** Final testing, docs, demo video
 **Concurrent Capacity:** Parallel to dev work
@@ -89,16 +97,17 @@ This sprint plan maximizes parallelization across **4-6 concurrent development a
 
 #### Parallel Work Streams
 
-| Agent | Story | Time | Status |
-|-------|-------|------|--------|
-| **Agent #1** | Story 1.1: Next.js Initialization | 1.5h | Blocking |
-| **Agent #1** → **Agent #2** | Story 1.2: UI Framework Setup | 1.5h | After 1.1 |
-| **Agent #1** → **Agent #5** | Story 1.3: Project Structure | 1.5h | After 1.1 |
-| **Agent #1** | Story 2.1: Chat UI Components | 3h | After 1.2 |
-| **Agent #2** | Story 2.2: Chat Input | 2h | After 1.2 |
-| **Agent #3** | Story 2.3: OpenAI API Integration | 3.5h | After 1.1 |
+| Agent                       | Story                             | Time | Status    |
+| --------------------------- | --------------------------------- | ---- | --------- |
+| **Agent #1**                | Story 1.1: Next.js Initialization | 1.5h | Blocking  |
+| **Agent #1** → **Agent #2** | Story 1.2: UI Framework Setup     | 1.5h | After 1.1 |
+| **Agent #1** → **Agent #5** | Story 1.3: Project Structure      | 1.5h | After 1.1 |
+| **Agent #1**                | Story 2.1: Chat UI Components     | 3h   | After 1.2 |
+| **Agent #2**                | Story 2.2: Chat Input             | 2h   | After 1.2 |
+| **Agent #3**                | Story 2.3: OpenAI API Integration | 3.5h | After 1.1 |
 
 **Dependency Chain:**
+
 ```
 Day 1:
   [Agent #1] Story 1.1 (1.5h) → BLOCKING
@@ -110,6 +119,7 @@ Day 2:
 ```
 
 **End of Sprint 1 Deliverables:**
+
 - ✅ Next.js project running
 - ✅ Chat UI functional
 - ✅ OpenAI API connected
@@ -125,17 +135,18 @@ Day 2:
 
 #### Parallel Work Streams
 
-| Agent | Story | Time | Dependencies | Day |
-|-------|-------|------|--------------|-----|
-| **Agent #4** | Story 3.1: Socratic Prompt | 4h | Sprint 1 done | Day 3 |
-| **Agent #3** | Story 3.2: Conversation Flow | 3h | Parallel to 3.1 | Day 3 |
-| **Agent #2** | Story 4.1: KaTeX Integration | 2h | Sprint 1 done | Day 3 |
-| **Agent #2** | Story 4.2: LaTeX Parser | 1.5h | After 4.1 | Day 3 |
-| **Agent #5** | Story 6.1: Storage Service | 2h | Sprint 1 done | Day 3-4 |
-| **Agent #1** | Story 6.2: Conversation Sidebar | 2.5h | Sprint 1 done | Day 3-4 |
-| **Agent #4** | Story 3.3: Problem Testing | 5h | After 3.1, 3.2 | Day 4-5 |
+| Agent        | Story                           | Time | Dependencies    | Day     |
+| ------------ | ------------------------------- | ---- | --------------- | ------- |
+| **Agent #4** | Story 3.1: Socratic Prompt      | 4h   | Sprint 1 done   | Day 3   |
+| **Agent #3** | Story 3.2: Conversation Flow    | 3h   | Parallel to 3.1 | Day 3   |
+| **Agent #2** | Story 4.1: KaTeX Integration    | 2h   | Sprint 1 done   | Day 3   |
+| **Agent #2** | Story 4.2: LaTeX Parser         | 1.5h | After 4.1       | Day 3   |
+| **Agent #5** | Story 6.1: Storage Service      | 2h   | Sprint 1 done   | Day 3-4 |
+| **Agent #1** | Story 6.2: Conversation Sidebar | 2.5h | Sprint 1 done   | Day 3-4 |
+| **Agent #4** | Story 3.3: Problem Testing      | 5h   | After 3.1, 3.2  | Day 4-5 |
 
 **Dependency Chain:**
+
 ```
 Day 3 (Multiple Parallel Streams):
   [Agent #4] Story 3.1 (4h)     }
@@ -150,6 +161,7 @@ Day 4-5:
 ```
 
 **End of Sprint 2 Deliverables:**
+
 - ✅ Socratic prompt working (NO direct answers)
 - ✅ Math equations render with LaTeX
 - ✅ Conversation persistence working
@@ -165,15 +177,16 @@ Day 4-5:
 
 #### Parallel Work Streams
 
-| Agent | Story | Time | Dependencies | Day |
-|-------|-------|------|--------------|-----|
-| **Agent #2** | Story 5.1: Image Upload UI | 3h | Sprint 2 done | Day 6 |
-| **Agent #3** | Story 5.2: Vision OCR | 5h | Sprint 2 done | Day 6-7 |
-| **Agent #4** | Continue Testing | 2-3h | Parallel | Day 6-7 |
-| **Agent #1** | UI Refinements | 2h | Parallel | Day 6-7 |
-| **Agent #5** | Documentation Prep | 2h | Parallel | Day 7-8 |
+| Agent        | Story                      | Time | Dependencies  | Day     |
+| ------------ | -------------------------- | ---- | ------------- | ------- |
+| **Agent #2** | Story 5.1: Image Upload UI | 3h   | Sprint 2 done | Day 6   |
+| **Agent #3** | Story 5.2: Vision OCR      | 5h   | Sprint 2 done | Day 6-7 |
+| **Agent #4** | Continue Testing           | 2-3h | Parallel      | Day 6-7 |
+| **Agent #1** | UI Refinements             | 2h   | Parallel      | Day 6-7 |
+| **Agent #5** | Documentation Prep         | 2h   | Parallel      | Day 7-8 |
 
 **Dependency Chain:**
+
 ```
 Day 6-7 (Parallel):
   [Agent #2] Story 5.1 (3h) → Image Upload UI
@@ -187,6 +200,7 @@ Day 8:
 ```
 
 **End of Sprint 3 Deliverables:**
+
 - ✅ Image upload working (drag-drop, file picker)
 - ✅ OCR extracts printed equations (95%+ accuracy)
 - ✅ OCR handles handwritten text (80%+ accuracy)
@@ -202,14 +216,15 @@ Day 8:
 
 #### Parallel Work Streams
 
-| Agent | Story | Time | Dependencies | Day |
-|-------|-------|------|--------------|-----|
-| **Agent #1** | Story 7.1: UI Polish & Dark Mode | 4h | Sprint 3 done | Day 9 |
-| **Agent #4** + **Agent #6** | Story 7.2: Comprehensive Testing | 6h | Sprint 3 done | Day 9-10 |
-| **Agent #5** + **Agent #3** | Story 7.3: Documentation & Deployment | 4h | Testing done | Day 10-11 |
-| **Agent #6** | Demo Video | 2h | Deployment done | Day 11-12 |
+| Agent                       | Story                                 | Time | Dependencies    | Day       |
+| --------------------------- | ------------------------------------- | ---- | --------------- | --------- |
+| **Agent #1**                | Story 7.1: UI Polish & Dark Mode      | 4h   | Sprint 3 done   | Day 9     |
+| **Agent #4** + **Agent #6** | Story 7.2: Comprehensive Testing      | 6h   | Sprint 3 done   | Day 9-10  |
+| **Agent #5** + **Agent #3** | Story 7.3: Documentation & Deployment | 4h   | Testing done    | Day 10-11 |
+| **Agent #6**                | Demo Video                            | 2h   | Deployment done | Day 11-12 |
 
 **Dependency Chain:**
+
 ```
 Day 9-10 (Parallel):
   [Agent #1] Story 7.1: UI Polish (4h)
@@ -228,6 +243,7 @@ Day 11-12:
 ```
 
 **End of Sprint 4 Deliverables:**
+
 - ✅ Dark mode implemented
 - ✅ All 10+ problem types passing tests
 - ✅ Deployed to production (Vercel)
@@ -305,6 +321,7 @@ graph TB
 ### Critical Path
 
 **Longest dependency chain (critical path):**
+
 ```
 Story 1.1 (1.5h)
   → Story 1.2 (1.5h)
@@ -320,6 +337,7 @@ TOTAL CRITICAL PATH: 27.5 hours
 ```
 
 **With 4-6 agents working in parallel on non-critical paths:**
+
 - Actual calendar time: **~10-12 days** (8-hour workdays)
 - If agents work longer days: **~8-10 days**
 
@@ -330,12 +348,14 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 1: Project Bootstrap**
 
 **Morning (4 hours):**
+
 - Agent #1: Story 1.1 - Next.js Initialization (1.5h)
 - Agent #1: Story 1.2 - UI Framework Setup (1.5h)
 - Agent #5: Story 1.3 - Project Structure (1.5h) [parallel to 1.2]
 - **Checkpoint:** Project runs, shadcn/ui installed
 
 **Afternoon (3 hours):**
+
 - Agents #1-3: Environment setup, API keys, testing
 - Team sync: Review setup, plan tomorrow
 
@@ -346,11 +366,13 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 2: Chat Interface & API**
 
 **Morning (4 hours):**
+
 - Agent #1: Story 2.1 - Chat UI Components (3h)
 - Agent #2: Story 2.2 - Chat Input (2h) [parallel]
 - Agent #3: Story 2.3 - OpenAI API Integration (3.5h) [parallel]
 
 **Afternoon (4 hours):**
+
 - Integration: Connect frontend to API
 - Testing: Send messages, verify streaming
 - **Checkpoint:** Working chat with OpenAI responses
@@ -362,11 +384,13 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 3: Socratic Engine & Math Rendering**
 
 **Morning (4 hours):**
+
 - Agent #4: Story 3.1 - Socratic Prompt (4h start, continues afternoon)
 - Agent #3: Story 3.2 - Conversation Flow (3h)
 - Agent #2: Story 4.1 - KaTeX Integration (2h)
 
 **Afternoon (4 hours):**
+
 - Agent #4: Story 3.1 continued + initial testing
 - Agent #2: Story 4.2 - LaTeX Parser (1.5h)
 - Agent #5: Story 6.1 - Storage Service (2h)
@@ -379,6 +403,7 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 4: Testing & Refinement**
 
 **All Day (8 hours):**
+
 - Agent #4: Story 3.3 - Problem Type Testing (5h)
 - Agents #1-3: Bug fixes based on testing feedback
 - Agent #5: Continue sidebar and storage integration
@@ -391,10 +416,12 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 5: Testing Completion**
 
 **Morning (4 hours):**
+
 - Agent #4: Complete Story 3.3 testing
 - All Agents: Critical bug fixes
 
 **Afternoon (4 hours):**
+
 - Integration testing: All features together
 - **Checkpoint:** Core features stable
 
@@ -405,6 +432,7 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 6: Image Processing Start**
 
 **All Day (8 hours):**
+
 - Agent #2: Story 5.1 - Image Upload UI (3h)
 - Agent #3: Story 5.2 - Vision OCR Integration (5h start)
 - Agent #4: Additional testing with math rendering
@@ -417,6 +445,7 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 7: OCR Completion**
 
 **All Day (8 hours):**
+
 - Agent #3: Complete Story 5.2 - Vision OCR
 - Agent #2: Test image upload + OCR integration
 - Agent #4: Test OCR accuracy with various images
@@ -429,6 +458,7 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 8: Integration & Testing**
 
 **All Day (8 hours):**
+
 - All Agents: Integration testing
 - Bug fixes and refinements
 - Agent #5: Documentation work
@@ -441,6 +471,7 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 9: Polish & Testing**
 
 **All Day (8 hours):**
+
 - Agent #1: Story 7.1 - UI Polish & Dark Mode (4h)
 - Agents #4 + #6: Story 7.2 - Comprehensive Testing (6h start)
 - Agents #2-3-5: Respond to testing issues
@@ -452,10 +483,12 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 10: Final Testing & Documentation**
 
 **Morning (4 hours):**
+
 - Agents #4 + #6: Complete comprehensive testing
 - All Agents: Fix identified issues
 
 **Afternoon (4 hours):**
+
 - Agents #5 + #3: Story 7.3 - Documentation (2h)
 - Agents #5 + #3: Deployment prep (2h)
 
@@ -466,11 +499,13 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 11: Deployment**
 
 **Morning (4 hours):**
+
 - Agents #5 + #3: Deploy to Vercel
 - All Agents: Production testing
 - Bug fixes if needed
 
 **Afternoon (4 hours):**
+
 - Agent #6: Start demo video recording
 - Agent #5: Final README polish
 - **Checkpoint:** Production deployment successful
@@ -482,11 +517,13 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### **Day 12: Launch Preparation**
 
 **Morning (4 hours):**
+
 - Agent #6: Complete demo video
 - Agent #5: Final documentation review
 - All Agents: Launch readiness checklist
 
 **Afternoon (2 hours):**
+
 - Final team review
 - **🚀 LAUNCH**
 
@@ -499,27 +536,33 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### High-Risk Items
 
 #### **Risk #1: Socratic Prompt Gives Direct Answers**
+
 **Probability:** Medium
 **Impact:** Critical (project failure)
 **Mitigation:**
+
 - Allocate extra time for Story 3.1 iteration
 - Agent #4 dedicated to testing
 - Have backup prompt strategies
 - Budget 2-3 extra days if needed
 
 #### **Risk #2: Agent Dependencies Cause Bottlenecks**
+
 **Probability:** Medium
 **Impact:** High (delays)
 **Mitigation:**
+
 - Daily standups to identify blockers
 - Flexible agent reassignment
 - Buffer time in schedule
 - Pre-plan handoff points
 
 #### **Risk #3: Integration Issues Between Parallel Streams**
+
 **Probability:** Medium
 **Impact:** Medium (rework needed)
 **Mitigation:**
+
 - Integration checkpoints every 2 days
 - Shared TypeScript types
 - API contract agreement upfront
@@ -528,17 +571,21 @@ TOTAL CRITICAL PATH: 27.5 hours
 ### Medium-Risk Items
 
 #### **Risk #4: OCR Accuracy Below Target**
+
 **Probability:** Low-Medium
 **Impact:** Medium
 **Mitigation:**
+
 - Test with real-world images early
 - Vision API prompt iteration
 - Fallback: manual entry option
 
 #### **Risk #5: Performance Issues in Production**
+
 **Probability:** Low
 **Impact:** Medium
 **Mitigation:**
+
 - Load testing before launch
 - Vercel analytics monitoring
 - Edge function optimization
@@ -552,6 +599,7 @@ TOTAL CRITICAL PATH: 27.5 hours
 **Time:** Start of day
 **Attendees:** All agents
 **Agenda:**
+
 1. What I completed yesterday
 2. What I'm working on today
 3. Any blockers or dependencies
@@ -561,6 +609,7 @@ TOTAL CRITICAL PATH: 27.5 hours
 **Frequency:** Every 2 days (Days 2, 4, 6, 8, 10)
 **Purpose:** Ensure all parallel work integrates correctly
 **Actions:**
+
 - Merge branches
 - Test integrations
 - Identify conflicts
@@ -577,12 +626,15 @@ TOTAL CRITICAL PATH: 27.5 hours
 ## Story Index & File Locations
 
 ### Created Stories (Detailed)
+
 - ✅ `docs/stories/story-1.1-nextjs-init.md`
 - ✅ `docs/stories/story-2.3-openai-api.md`
 - ✅ `docs/stories/story-3.1-socratic-prompt.md`
 
 ### Remaining Stories (Defined in Epics)
+
 All other stories are documented in their respective epic files:
+
 - `docs/_epic-1-project-foundation.md` (Stories 1.2, 1.3)
 - `docs/_epic-2-chat-system.md` (Stories 2.1, 2.2)
 - `docs/_epic-3-socratic-engine.md` (Stories 3.2, 3.3)
@@ -596,6 +648,7 @@ All other stories are documented in their respective epic files:
 ## Success Criteria
 
 ### Project Complete When:
+
 - [ ] All 7 epics completed
 - [ ] All core stories (1.1 through 7.3) done
 - [ ] All 10+ problem types tested and passing
@@ -605,6 +658,7 @@ All other stories are documented in their respective epic files:
 - [ ] Demo video recorded
 
 ### Quality Gates:
+
 - [ ] TypeScript strict mode passing
 - [ ] ESLint passing with no warnings
 - [ ] All tests passing
@@ -626,6 +680,7 @@ All other stories are documented in their respective epic files:
 ### Task Board Setup:
 
 **Columns:**
+
 - Backlog
 - Ready
 - In Progress
@@ -634,6 +689,7 @@ All other stories are documented in their respective epic files:
 - Done
 
 **Initial Board State:**
+
 - Story 1.1 → Ready
 - All other stories → Backlog
 - Move stories to Ready as dependencies clear
@@ -643,6 +699,7 @@ All other stories are documented in their respective epic files:
 ## Appendix: Agent Skill Requirements
 
 ### Agent #1: Frontend UI Specialist
+
 - React 18+
 - Next.js 14 App Router
 - Tailwind CSS
@@ -652,6 +709,7 @@ All other stories are documented in their respective epic files:
 - Accessibility (WCAG)
 
 ### Agent #2: Frontend Features Specialist
+
 - React hooks (useState, useEffect, custom hooks)
 - File handling APIs
 - Image processing (browser-image-compression)
@@ -660,6 +718,7 @@ All other stories are documented in their respective epic files:
 - TypeScript
 
 ### Agent #3: Backend API Specialist
+
 - Next.js API routes
 - Edge runtime
 - OpenAI SDK
@@ -669,6 +728,7 @@ All other stories are documented in their respective epic files:
 - TypeScript
 
 ### Agent #4: Prompt Engineering & Testing
+
 - LLM prompt engineering
 - GPT-4 API experience
 - QA testing methodologies
@@ -677,6 +737,7 @@ All other stories are documented in their respective epic files:
 - Critical thinking (Socratic method understanding)
 
 ### Agent #5: Full-Stack Utility
+
 - localStorage / browser storage APIs
 - File system operations
 - Git/GitHub
@@ -685,6 +746,7 @@ All other stories are documented in their respective epic files:
 - TypeScript
 
 ### Agent #6: QA & Documentation (Optional)
+
 - Manual QA testing
 - Cross-browser testing
 - Device testing
@@ -702,4 +764,4 @@ All other stories are documented in their respective epic files:
 
 **Let's build this! 🚀**
 
-*Last Updated: November 7, 2025*
+_Last Updated: November 7, 2025_

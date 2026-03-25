@@ -198,9 +198,7 @@ export async function copyToClipboard(
     const blob = await exportToImageBlob(elements, appState, files, 'image/png');
 
     // Copy to clipboard
-    await navigator.clipboard.write([
-      new ClipboardItem({ 'image/png': blob })
-    ]);
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
   } catch (error) {
     console.error('Error copying to clipboard:', error);
     throw new Error('Failed to copy whiteboard to clipboard');

@@ -15,9 +15,7 @@ export function LanguageSettings({ currentLanguage, onLanguageChange }: Language
   return (
     <div className="space-y-3">
       <div className="mb-4">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          {t('description')}
-        </p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">{t('description')}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-2">
@@ -40,18 +38,22 @@ export function LanguageSettings({ currentLanguage, onLanguageChange }: Language
             <div className="flex items-center gap-3">
               <div className="text-3xl">{language.flag}</div>
               <div className="flex-1 min-w-0">
-                <div className={`text-sm font-semibold ${
-                  currentLanguage === language.code
-                    ? 'text-white'
-                    : 'text-gray-900 dark:text-white'
-                }`}>
+                <div
+                  className={`text-sm font-semibold ${
+                    currentLanguage === language.code
+                      ? 'text-white'
+                      : 'text-gray-900 dark:text-white'
+                  }`}
+                >
                   {language.nativeName}
                 </div>
-                <div className={`text-xs ${
-                  currentLanguage === language.code
-                    ? 'text-blue-100'
-                    : 'text-gray-600 dark:text-gray-300'
-                }`}>
+                <div
+                  className={`text-xs ${
+                    currentLanguage === language.code
+                      ? 'text-blue-100'
+                      : 'text-gray-600 dark:text-gray-300'
+                  }`}
+                >
                   {language.name}
                 </div>
               </div>
@@ -59,7 +61,11 @@ export function LanguageSettings({ currentLanguage, onLanguageChange }: Language
             {currentLanguage === language.code && (
               <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
             )}

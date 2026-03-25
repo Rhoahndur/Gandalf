@@ -10,7 +10,11 @@ interface VoiceSettingsProps {
   onVoiceTest?: () => void;
 }
 
-export function VoiceSettings({ preferences, onPreferencesChange, onVoiceTest }: VoiceSettingsProps) {
+export function VoiceSettings({
+  preferences,
+  onPreferencesChange,
+  onVoiceTest,
+}: VoiceSettingsProps) {
   const t = useTranslations('settings.voice');
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [isTestingSpeech, setIsTestingSpeech] = useState(false);
@@ -22,19 +26,30 @@ export function VoiceSettings({ preferences, onPreferencesChange, onVoiceTest }:
   useEffect(() => {
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
-      console.log('[VoiceSettings] Loaded voices:', voices.length, 'Current recognition language:', preferences.recognitionLang);
+      console.log(
+        '[VoiceSettings] Loaded voices:',
+        voices.length,
+        'Current recognition language:',
+        preferences.recognitionLang
+      );
       setAvailableVoices(voices);
 
       // If no voice is selected or selected voice doesn't match current language, set a default
       if (voices.length > 0) {
-        const currentVoiceValid = preferences.voiceName && voices.some(v => v.name === preferences.voiceName);
+        const currentVoiceValid =
+          preferences.voiceName && voices.some((v) => v.name === preferences.voiceName);
 
         if (!currentVoiceValid) {
           // Find a voice matching the current language
-          const matchingVoice = voices.find(v => v.lang.startsWith(currentLangPrefix));
+          const matchingVoice = voices.find((v) => v.lang.startsWith(currentLangPrefix));
           const defaultVoice = matchingVoice || voices[0];
 
-          console.log('[VoiceSettings] Setting default voice:', defaultVoice.name, 'for language:', preferences.recognitionLang);
+          console.log(
+            '[VoiceSettings] Setting default voice:',
+            defaultVoice.name,
+            'for language:',
+            preferences.recognitionLang
+          );
           onPreferencesChange({
             ...preferences,
             voiceName: defaultVoice.name,
@@ -102,9 +117,12 @@ export function VoiceSettings({ preferences, onPreferencesChange, onVoiceTest }:
     console.log('[VoiceSettings] Language changed to:', newLang);
 
     // Find a voice matching the new language
-    const matchingVoice = availableVoices.find(v => v.lang.startsWith(newLangPrefix));
+    const matchingVoice = availableVoices.find((v) => v.lang.startsWith(newLangPrefix));
 
-    console.log('[VoiceSettings] Auto-selecting voice for new language:', matchingVoice?.name || 'none found');
+    console.log(
+      '[VoiceSettings] Auto-selecting voice for new language:',
+      matchingVoice?.name || 'none found'
+    );
 
     onPreferencesChange({
       ...preferences,
@@ -124,12 +142,10 @@ export function VoiceSettings({ preferences, onPreferencesChange, onVoiceTest }:
     // Mark that user has interacted (needed for browser auto-play restrictions)
     onVoiceTest?.();
 
-    const utterance = new SpeechSynthesisUtterance(
-      t('testVoice.testUtterance')
-    );
+    const utterance = new SpeechSynthesisUtterance(t('testVoice.testUtterance'));
 
     // Find and set the selected voice
-    const selectedVoice = availableVoices.find(v => v.name === preferences.voiceName);
+    const selectedVoice = availableVoices.find((v) => v.name === preferences.voiceName);
     if (selectedVoice) {
       utterance.voice = selectedVoice;
     }
@@ -149,18 +165,26 @@ export function VoiceSettings({ preferences, onPreferencesChange, onVoiceTest }:
   const filteredVoices = availableVoices;
 
   // Separate voices into current language and others
-  const currentLangVoices = filteredVoices.filter(v => v.lang.startsWith(currentLangPrefix));
-  const otherVoices = filteredVoices.filter(v => !v.lang.startsWith(currentLangPrefix));
+  const currentLangVoices = filteredVoices.filter((v) => v.lang.startsWith(currentLangPrefix));
+  const otherVoices = filteredVoices.filter((v) => !v.lang.startsWith(currentLangPrefix));
 
   // Group voices by language
-  const groupedVoices = filteredVoices.reduce((acc, voice) => {
-    const lang = voice.lang || 'Other';
-    if (!acc[lang]) acc[lang] = [];
-    acc[lang].push(voice);
-    return acc;
-  }, {} as Record<string, SpeechSynthesisVoice[]>);
+  const groupedVoices = filteredVoices.reduce(
+    (acc, voice) => {
+      const lang = voice.lang || 'Other';
+      if (!acc[lang]) acc[lang] = [];
+      acc[lang].push(voice);
+      return acc;
+    },
+    {} as Record<string, SpeechSynthesisVoice[]>
+  );
 
-  console.log('[VoiceSettings] Voices filtered - Current language:', currentLangVoices.length, 'Others:', otherVoices.length);
+  console.log(
+    '[VoiceSettings] Voices filtered - Current language:',
+    currentLangVoices.length,
+    'Others:',
+    otherVoices.length
+  );
 
   return (
     <div className="space-y-6">
@@ -177,9 +201,7 @@ export function VoiceSettings({ preferences, onPreferencesChange, onVoiceTest }:
         <button
           onClick={handleToggleAutoRead}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 ${
-            preferences.autoRead
-              ? 'bg-blue-600'
-              : 'bg-gray-300 dark:bg-gray-600'
+            preferences.autoRead ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
           }`}
           role="switch"
           aria-checked={preferences.autoRead}
@@ -212,7 +234,8 @@ export function VoiceSettings({ preferences, onPreferencesChange, onVoiceTest }:
                 <optgroup label={`${preferences.recognitionLang} (Current Language)`}>
                   {currentLangVoices.map((voice) => (
                     <option key={voice.name} value={voice.name}>
-                      {voice.name} {voice.localService ? t('voiceSelect.local') : t('voiceSelect.network')}
+                      {voice.name}{' '}
+                      {voice.localService ? t('voiceSelect.local') : t('voiceSelect.network')}
                     </option>
                   ))}
                 </optgroup>
@@ -228,7 +251,8 @@ export function VoiceSettings({ preferences, onPreferencesChange, onVoiceTest }:
                       <optgroup key={lang} label={lang}>
                         {voices.map((voice) => (
                           <option key={voice.name} value={voice.name}>
-                            {voice.name} {voice.localService ? t('voiceSelect.local') : t('voiceSelect.network')}
+                            {voice.name}{' '}
+                            {voice.localService ? t('voiceSelect.local') : t('voiceSelect.network')}
                           </option>
                         ))}
                       </optgroup>

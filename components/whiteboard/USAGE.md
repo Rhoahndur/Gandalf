@@ -18,6 +18,7 @@ The whiteboard components provide a full Excalidraw integration for the Gandalf 
 Main Excalidraw wrapper component with theme synchronization and responsive design.
 
 **Features:**
+
 - Automatic dark/light theme detection
 - Responsive sizing (min 400px mobile, 600px desktop)
 - Element change tracking
@@ -70,6 +71,7 @@ interface WhiteboardCanvasProps {
 Simple toolbar for whiteboard control with toggle, clear, and save buttons.
 
 **Features:**
+
 - Toggle show/hide whiteboard
 - Clear confirmation dialog
 - Save/export functionality
@@ -106,10 +108,11 @@ Standalone test component demonstrating all functionality.
 import { WhiteboardTest } from '@/components/whiteboard/WhiteboardTest';
 
 // In your page or component:
-<WhiteboardTest />
+<WhiteboardTest />;
 ```
 
 This provides a complete testing interface with:
+
 - Toggle visibility
 - Element counter
 - Theme indicator
@@ -156,15 +159,17 @@ hooks/
 Due to TypeScript module resolution complexities with Excalidraw's type exports, the components use simplified `any` types internally. This avoids import path issues while maintaining full functionality.
 
 **Original approach attempted:**
+
 ```typescript
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/types/element/types';
 // ❌ Module not found errors
 ```
 
 **Working approach:**
+
 ```typescript
 interface Props {
-  elements: readonly any[];  // ✅ Works without import issues
+  elements: readonly any[]; // ✅ Works without import issues
 }
 ```
 
@@ -198,10 +203,7 @@ return (
       {/* Whiteboard sidebar */}
       {showWhiteboard && (
         <div className="w-1/2 h-screen">
-          <WhiteboardCanvas
-            isVisible={showWhiteboard}
-            onElementsChange={setWhiteboardElements}
-          />
+          <WhiteboardCanvas isVisible={showWhiteboard} onElementsChange={setWhiteboardElements} />
         </div>
       )}
     </div>
@@ -212,18 +214,24 @@ return (
 2. **Responsive layout:**
 
 ```tsx
-{/* Mobile: Full screen overlay */}
-{showWhiteboard && (
-  <div className="fixed inset-0 z-50 md:hidden">
-    <WhiteboardCanvas isVisible={showWhiteboard} />
-  </div>
-)}
+{
+  /* Mobile: Full screen overlay */
+}
+{
+  showWhiteboard && (
+    <div className="fixed inset-0 z-50 md:hidden">
+      <WhiteboardCanvas isVisible={showWhiteboard} />
+    </div>
+  );
+}
 
-{/* Desktop: Side-by-side */}
+{
+  /* Desktop: Side-by-side */
+}
 <div className="hidden md:flex">
   <ChatContainer />
   {showWhiteboard && <WhiteboardCanvas isVisible={showWhiteboard} />}
-</div>
+</div>;
 ```
 
 ## Next Steps (For Other Agents)
@@ -256,6 +264,7 @@ npm run dev
 ## Support
 
 For issues or questions:
+
 - Check Excalidraw documentation: https://docs.excalidraw.com
 - Review component source code with inline documentation
 - Test with WhiteboardTest component first

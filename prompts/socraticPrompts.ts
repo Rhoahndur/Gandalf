@@ -1340,7 +1340,9 @@ ${getHintFrequencyInstructions(config.hintFrequency, language)}`;
   };
 
   const marker = conversationFlowMarkers[language];
-  const parts = basePrompt.split(`═══════════════════════════════════════════════════════════════════\n${marker}`);
+  const parts = basePrompt.split(
+    `═══════════════════════════════════════════════════════════════════\n${marker}`
+  );
 
   return (
     parts[0] +

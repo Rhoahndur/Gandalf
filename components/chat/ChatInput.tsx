@@ -149,7 +149,8 @@ export function ChatInput({
     const symbolToInsert = isInsideMathBlock() ? symbol.replace(/^\$|\$$/g, '') : symbol;
 
     // Insert symbol at cursor position
-    const newValue = currentValue.substring(0, start) + symbolToInsert + currentValue.substring(end);
+    const newValue =
+      currentValue.substring(0, start) + symbolToInsert + currentValue.substring(end);
 
     // Create synthetic event to update input
     const syntheticEvent = {
@@ -210,17 +211,18 @@ export function ChatInput({
       {error && (
         <div className="mb-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg text-sm flex items-start gap-2 animate-in slide-in-from-top-2 duration-300">
           <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clipRule="evenodd"
+            />
           </svg>
           <span>{error}</span>
         </div>
       )}
 
       {/* Math Symbol Keyboard */}
-      <MathSymbolKeyboard
-        onSymbolClick={handleSymbolInsert}
-        isVisible={showMathKeyboard}
-      />
+      <MathSymbolKeyboard onSymbolClick={handleSymbolInsert} isVisible={showMathKeyboard} />
 
       {/* Image preview */}
       {selectedImage && imagePreviewUrl && (
@@ -327,7 +329,11 @@ export function ChatInput({
               <div className="text-xs font-medium text-blue-700 dark:text-blue-400 mb-1 flex items-center gap-1">
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                  <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 Preview:
               </div>

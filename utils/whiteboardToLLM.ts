@@ -23,8 +23,10 @@ const MAX_DESCRIPTION_LENGTH = 800;
  * Describe a point location in relative terms
  */
 function describePosition(x: number, y: number, canvasWidth = 800, canvasHeight = 600): string {
-  const horizontalPos = x < canvasWidth / 3 ? 'left' : x > (2 * canvasWidth) / 3 ? 'right' : 'center';
-  const verticalPos = y < canvasHeight / 3 ? 'top' : y > (2 * canvasHeight) / 3 ? 'bottom' : 'middle';
+  const horizontalPos =
+    x < canvasWidth / 3 ? 'left' : x > (2 * canvasWidth) / 3 ? 'right' : 'center';
+  const verticalPos =
+    y < canvasHeight / 3 ? 'top' : y > (2 * canvasHeight) / 3 ? 'bottom' : 'middle';
 
   if (horizontalPos === 'center' && verticalPos === 'middle') {
     return 'center';
@@ -200,7 +202,9 @@ export function serializeWhiteboardForLLM(elements: WhiteboardElement[]): string
   // Build concise description
   const parts: string[] = [];
 
-  parts.push(`[Whiteboard contains ${context.elementCount} element${context.elementCount > 1 ? 's' : ''}:`);
+  parts.push(
+    `[Whiteboard contains ${context.elementCount} element${context.elementCount > 1 ? 's' : ''}:`
+  );
 
   if (context.description) {
     parts.push(context.description);

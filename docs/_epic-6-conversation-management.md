@@ -30,6 +30,7 @@ Implement conversation persistence using localStorage, allowing users to save, l
 ## User Stories
 
 ### Story 6.1: Local Storage Service & Data Model
+
 **File:** `docs/stories/story-6.1-storage-service.md`
 **Estimated Time:** 2 hours
 **Agent Assignment:** Backend/Full-stack DEV Agent
@@ -40,6 +41,7 @@ Create storage manager utility for localStorage operations (save, load, delete, 
 ---
 
 ### Story 6.2: Conversation Sidebar & UI
+
 **File:** `docs/stories/story-6.2-conversation-sidebar.md`
 **Estimated Time:** 2.5 hours
 **Agent Assignment:** Frontend DEV Agent (can work parallel to 6.1)
@@ -52,15 +54,16 @@ Build ConversationSidebar component with conversation list, "New Conversation" b
 ## Technical Specifications
 
 ### Data Model
+
 ```typescript
 interface Conversation {
-  id: string;                    // UUID
-  title: string;                 // Auto-generated or user-set
-  messages: Message[];           // Full message array
-  createdAt: Date;               // Creation timestamp
-  updatedAt: Date;               // Last modified
-  problemType?: string;          // Category: algebra, geometry, etc.
-  thumbnail?: string;            // First message preview
+  id: string; // UUID
+  title: string; // Auto-generated or user-set
+  messages: Message[]; // Full message array
+  createdAt: Date; // Creation timestamp
+  updatedAt: Date; // Last modified
+  problemType?: string; // Category: algebra, geometry, etc.
+  thumbnail?: string; // First message preview
 }
 
 interface StorageManager {
@@ -73,6 +76,7 @@ interface StorageManager {
 ```
 
 ### Component Structure
+
 ```
 components/layout/
   ├── ConversationSidebar.tsx       # Main sidebar
@@ -87,6 +91,7 @@ hooks/
 ```
 
 ### Storage Keys
+
 ```
 ai-math-tutor:conversations        # Array of conversation IDs
 ai-math-tutor:conversation:{id}    # Individual conversation data
@@ -95,6 +100,7 @@ ai-math-tutor:preferences          # User preferences
 ```
 
 ### Auto-save Logic
+
 ```typescript
 // Debounced auto-save
 useEffect(() => {
@@ -119,12 +125,14 @@ useEffect(() => {
 ## Testing Checklist
 
 ### Persistence
+
 - [ ] Create conversation and refresh page → conversation loads
 - [ ] Send 10 messages → all persist
 - [ ] Close browser completely → data still there
 - [ ] Clear localStorage manually → app handles gracefully
 
 ### CRUD Operations
+
 - [ ] Create new conversation
 - [ ] Load existing conversation
 - [ ] Update conversation (auto-save)
@@ -132,6 +140,7 @@ useEffect(() => {
 - [ ] Switch between 3+ conversations
 
 ### Edge Cases
+
 - [ ] localStorage quota exceeded → graceful error
 - [ ] Corrupted data in storage → handle or reset
 - [ ] Very long conversation (100+ messages) → still works
@@ -139,6 +148,7 @@ useEffect(() => {
 - [ ] Delete active conversation → switches to new/default
 
 ### UI/UX
+
 - [ ] Sidebar shows all conversations
 - [ ] Active conversation highlighted
 - [ ] Conversation titles make sense
@@ -147,6 +157,7 @@ useEffect(() => {
 - [ ] "New Conversation" clears current chat
 
 ### Export
+
 - [ ] Export as text → readable format
 - [ ] Export as JSON → valid JSON
 - [ ] Export includes timestamps
@@ -157,6 +168,7 @@ useEffect(() => {
 ## Files to Create/Modify
 
 ### New Files
+
 - `utils/storageManager.ts`
 - `hooks/useLocalStorage.ts`
 - `components/layout/ConversationSidebar.tsx`
@@ -164,6 +176,7 @@ useEffect(() => {
 - `components/layout/Header.tsx`
 
 ### Modified Files
+
 - `app/page.tsx` (integrate sidebar and persistence)
 - `app/layout.tsx` (add sidebar to layout)
 - `types/conversation.ts` (extend with conversation model)
@@ -193,12 +206,12 @@ function generateTitle(firstMessage: Message): string {
   const text = firstMessage.content.substring(0, 50);
 
   // Detect problem type
-  if (text.match(/\d+x/)) return "Algebra Problem";
-  if (text.match(/area|triangle|circle/i)) return "Geometry Problem";
-  if (text.match(/\+|-|\*|\//) && !text.match(/x|y/)) return "Arithmetic Problem";
+  if (text.match(/\d+x/)) return 'Algebra Problem';
+  if (text.match(/area|triangle|circle/i)) return 'Geometry Problem';
+  if (text.match(/\+|-|\*|\//) && !text.match(/x|y/)) return 'Arithmetic Problem';
 
   // Fallback to preview
-  return text.trim() + "...";
+  return text.trim() + '...';
 }
 ```
 
@@ -206,15 +219,16 @@ function generateTitle(firstMessage: Message): string {
 
 ## Storage Size Management
 
-| Data Type | Typical Size | Max Conversations |
-|-----------|--------------|-------------------|
-| Simple problem (5 turns) | ~5 KB | ~1000 |
-| Complex problem (20 turns) | ~20 KB | ~250 |
-| With images (5 turns) | ~50 KB | ~100 |
+| Data Type                  | Typical Size | Max Conversations |
+| -------------------------- | ------------ | ----------------- |
+| Simple problem (5 turns)   | ~5 KB        | ~1000             |
+| Complex problem (20 turns) | ~20 KB       | ~250              |
+| With images (5 turns)      | ~50 KB       | ~100              |
 
 **localStorage limit:** ~5-10 MB (browser dependent)
 
 **Strategy:**
+
 - Warn at 80% capacity
 - Offer to delete old conversations
 - Compress older conversations (future)
@@ -240,9 +254,11 @@ function generateTitle(firstMessage: Message): string {
 ## Risk Mitigation
 
 **Medium Risk:** localStorage quota exceeded
+
 - **Mitigation:** Monitor usage, warn user, provide cleanup
 
 **Low Risk:** Data corruption
+
 - **Mitigation:** Validate on load, provide reset option
 
 ---

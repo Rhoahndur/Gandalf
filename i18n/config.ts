@@ -9,5 +9,5 @@ export const localeNames: Record<Locale, string> = {
   fr: 'Français',
   de: 'Deutsch',
   zh: '中文',
-  ja: '日本語'
+  ja: '日本語',
 };

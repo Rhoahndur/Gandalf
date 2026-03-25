@@ -31,14 +31,18 @@ export function HintLevelIndicator({
       </span>
 
       {/* Dot indicators */}
-      <div className="flex gap-1" role="progressbar" aria-valuenow={currentLevel} aria-valuemin={0} aria-valuemax={MAX_HINT_LEVEL}>
+      <div
+        className="flex gap-1"
+        role="progressbar"
+        aria-valuenow={currentLevel}
+        aria-valuemin={0}
+        aria-valuemax={MAX_HINT_LEVEL}
+      >
         {Array.from({ length: MAX_HINT_LEVEL + 1 }).map((_, i) => (
           <div
             key={i}
             className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              i <= currentLevel
-                ? 'bg-blue-500 scale-110'
-                : 'bg-gray-300 dark:bg-gray-600'
+              i <= currentLevel ? 'bg-blue-500 scale-110' : 'bg-gray-300 dark:bg-gray-600'
             }`}
             aria-label={`Level ${i}${i <= currentLevel ? ' completed' : ''}`}
           />

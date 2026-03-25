@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
+  content: ['./app/**/*.{js,ts,jsx,tsx,mdx}', './components/**/*.{js,ts,jsx,tsx,mdx}'],
   darkMode: 'class', // Use class-based dark mode (controlled by toggle)
   theme: {
     extend: {
@@ -17,7 +14,7 @@ module.exports = {
         },
       },
       animation: {
-        'in': 'fadeIn 0.3s ease-out',
+        in: 'fadeIn 0.3s ease-out',
         'slide-in-from-top': 'slideInFromTop 0.3s ease-out',
         'slide-in-from-bottom': 'slideInFromBottom 0.3s ease-out',
         'slide-in-from-left': 'slideInFromLeft 0.3s ease-out',
@@ -43,4 +40,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

@@ -108,9 +108,7 @@ export function saveWhiteboardState(
  * @param conversationId - The ID of the conversation
  * @returns Result object with whiteboard data or null if not found
  */
-export function loadWhiteboardState(
-  conversationId: string
-): WhiteboardStorageResult {
+export function loadWhiteboardState(conversationId: string): WhiteboardStorageResult {
   // Return empty state for null or 'new' conversation
   if (!conversationId || conversationId === 'new') {
     return {

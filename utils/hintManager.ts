@@ -69,10 +69,7 @@ export function saveHintState(
 }
 
 // Load hint state for a conversation/problem
-export function loadHintState(
-  conversationId: string,
-  problemId: string
-): HintState | null {
+export function loadHintState(conversationId: string, problemId: string): HintState | null {
   try {
     const storage = getAllHintStates();
     return storage[conversationId]?.[problemId] || null;
@@ -83,11 +80,7 @@ export function loadHintState(
 }
 
 // Add a hint entry to history
-export function addHintEntry(
-  conversationId: string,
-  problemId: string,
-  entry: HintEntry
-): void {
+export function addHintEntry(conversationId: string, problemId: string, entry: HintEntry): void {
   try {
     const storage = getAllHintStates();
 
@@ -135,10 +128,7 @@ export function clearProblemHints(conversationId: string, problemId: string): vo
 }
 
 // Get current hint level
-export function getCurrentHintLevel(
-  conversationId: string,
-  problemId: string
-): number {
+export function getCurrentHintLevel(conversationId: string, problemId: string): number {
   try {
     const state = loadHintState(conversationId, problemId);
     return state?.currentLevel ?? 0;
@@ -149,10 +139,7 @@ export function getCurrentHintLevel(
 }
 
 // Increment hint level
-export function incrementHintLevel(
-  conversationId: string,
-  problemId: string
-): number {
+export function incrementHintLevel(conversationId: string, problemId: string): number {
   try {
     const currentLevel = getCurrentHintLevel(conversationId, problemId);
     const newLevel = Math.min(currentLevel + 1, MAX_HINT_LEVEL) as HintLevel;

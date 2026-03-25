@@ -29,6 +29,7 @@ Implement the core Socratic questioning methodology through advanced prompt engi
 ## User Stories
 
 ### Story 3.1: Socratic System Prompt Engineering
+
 **File:** `docs/stories/story-3.1-socratic-prompt.md`
 **Estimated Time:** 4 hours
 **Agent Assignment:** Prompt Engineering Specialist / DEV Agent #1
@@ -39,6 +40,7 @@ Design and implement comprehensive Socratic system prompt with absolute rules (n
 ---
 
 ### Story 3.2: Conversation Flow & Hint Logic
+
 **File:** `docs/stories/story-3.2-conversation-flow.md`
 **Estimated Time:** 3 hours
 **Agent Assignment:** DEV Agent #2 (parallel)
@@ -49,6 +51,7 @@ Implement conversation flow utilities, hint generation logic with escalation lev
 ---
 
 ### Story 3.3: Problem Type Testing & Validation
+
 **File:** `docs/stories/story-3.3-problem-testing.md`
 **Estimated Time:** 5 hours
 **Agent Assignment:** QA/Testing Specialist / DEV Agent #3 (parallel)
@@ -61,10 +64,12 @@ Test Socratic engine with 10+ diverse problems (arithmetic, algebra, word proble
 ## Technical Specifications
 
 ### System Prompt Structure
+
 ```markdown
 You are a patient, encouraging math tutor using the Socratic method.
 
 ABSOLUTE RULES:
+
 1. NEVER give direct answers or solutions
 2. NEVER solve steps for the student
 3. ALWAYS guide through questions
@@ -73,6 +78,7 @@ ABSOLUTE RULES:
 6. Use warm, encouraging language
 
 CONVERSATION STRUCTURE:
+
 1. Problem Understanding - "What are we trying to find?"
 2. Inventory Knowns - "What information do we have?"
 3. Method Selection - "What approach might work?"
@@ -80,17 +86,20 @@ CONVERSATION STRUCTURE:
 5. Verification - "How can we check if this is right?"
 
 HINT ESCALATION (after 2+ stuck turns):
+
 - First hint: Point to relevant concept
 - Second hint: Suggest specific method
 - Third hint: Show similar example (different numbers)
 
 ENCOURAGING PHRASES:
+
 - "Great thinking!"
 - "You're on the right track!"
 - "That's a smart observation!"
 - "Don't worry, this is tricky. Let's think about..."
 
 NEVER SAY:
+
 - "The answer is..."
 - "You need to..."
 - "The solution is..."
@@ -98,6 +107,7 @@ NEVER SAY:
 ```
 
 ### File Structure
+
 ```
 prompts/
   ├── socraticPrompt.ts         # Main system prompt
@@ -110,6 +120,7 @@ utils/
 ```
 
 ### Conversation Flow State Machine
+
 ```
 ProblemReceived → ParseProblem → InventoryKnowns → IdentifyGoal
 → SelectMethod → GuideStep → ValidateReasoning → CheckProgress
@@ -122,6 +133,7 @@ ProblemReceived → ParseProblem → InventoryKnowns → IdentifyGoal
 ## Problem Type Test Suite
 
 ### Test Problems (10+ types)
+
 1. **Simple Arithmetic:** "15 + 27 = ?"
 2. **Basic Algebra:** "2x + 5 = 13"
 3. **Word Problem:** "If Jane has 3 apples and buys 5 more, how many does she have?"
@@ -138,6 +150,7 @@ ProblemReceived → ParseProblem → InventoryKnowns → IdentifyGoal
 ## Testing Checklist
 
 ### Per Problem Type
+
 - [ ] Tutor asks guiding questions (not commands)
 - [ ] No direct answers provided at any point
 - [ ] Hints appear after 2+ stuck turns
@@ -148,6 +161,7 @@ ProblemReceived → ParseProblem → InventoryKnowns → IdentifyGoal
 - [ ] Conversation feels natural
 
 ### Overall Quality
+
 - [ ] Works across all 10+ problem types
 - [ ] Consistent personality and tone
 - [ ] Adapts to student understanding level
@@ -159,6 +173,7 @@ ProblemReceived → ParseProblem → InventoryKnowns → IdentifyGoal
 ## Files to Create/Modify
 
 ### New Files
+
 - `prompts/socraticPrompt.ts`
 - `prompts/problemTypes.ts`
 - `utils/conversationFlow.ts`
@@ -168,6 +183,7 @@ ProblemReceived → ParseProblem → InventoryKnowns → IdentifyGoal
 - `docs/EXAMPLE_CONVERSATIONS.md`
 
 ### Modified Files
+
 - `app/api/chat/route.ts` (integrate system prompt)
 
 ---
@@ -209,12 +225,15 @@ ProblemReceived → ParseProblem → InventoryKnowns → IdentifyGoal
 ## Risk Mitigation
 
 **High Risk:** LLM may give direct answers despite prompting
+
 - **Mitigation:** Extensive testing, validation layer, prompt iteration
 
 **Medium Risk:** Hints too vague or too specific
+
 - **Mitigation:** Escalation testing, user feedback, tuning
 
 **Medium Risk:** Conversation feels robotic or repetitive
+
 - **Mitigation:** Variety in phrasing, natural language patterns
 
 ---

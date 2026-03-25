@@ -40,7 +40,7 @@ export const HINT_LEVEL_NAMES = {
   1: 'Direction',
   2: 'Specific Method',
   3: 'Partial Step',
-  4: 'Full Example'
+  4: 'Full Example',
 } as const;
 
 export const MAX_HINT_LEVEL: HintLevel = 4;

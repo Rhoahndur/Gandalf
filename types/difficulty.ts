@@ -11,7 +11,7 @@ export interface DifficultyConfig {
 }
 
 export const DIFFICULTY_CONFIGS: Record<DifficultyLevel, DifficultyConfig> = {
-  'elementary': {
+  elementary: {
     id: 'elementary',
     name: 'Elementary',
     description: 'Grades K-5: Simple language, frequent hints, encouraging',
@@ -38,7 +38,7 @@ export const DIFFICULTY_CONFIGS: Record<DifficultyLevel, DifficultyConfig> = {
     languageComplexity: 'advanced',
     questioningIntensity: 'challenging',
   },
-  'college': {
+  college: {
     id: 'college',
     name: 'College',
     description: 'Higher education: Technical language, rigorous approach',

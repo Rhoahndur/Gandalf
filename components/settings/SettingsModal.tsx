@@ -66,7 +66,7 @@ export function SettingsModal({
           alignItems: 'center',
           justifyContent: 'center',
           padding: '1rem',
-          pointerEvents: 'none'
+          pointerEvents: 'none',
         }}
       >
         <div
@@ -74,22 +74,30 @@ export function SettingsModal({
           style={{
             maxHeight: '90vh',
             overflowY: 'auto',
-            pointerEvents: 'auto'
+            pointerEvents: 'auto',
           }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between rounded-t-2xl z-10">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-              {t('modal.title')}
-            </h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">{t('modal.title')}</h2>
             <button
               onClick={onClose}
               className="p-1.5 hover:opacity-80 rounded-lg transition-opacity duration-200"
               aria-label={t('modal.closeAriaLabel')}
             >
-              <svg className="w-5 h-5 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-5 h-5 text-red-500 dark:text-red-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -147,24 +155,30 @@ export function SettingsModal({
                           : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 hover:border-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                       }
                     `}
-                    aria-label={t('difficulty.setDifficultyAriaLabel', { name: tDifficulty(`${difficulty.id}.name`) })}
+                    aria-label={t('difficulty.setDifficultyAriaLabel', {
+                      name: tDifficulty(`${difficulty.id}.name`),
+                    })}
                     aria-pressed={currentDifficulty === difficulty.id}
                   >
                     <div className="flex items-center gap-2">
                       <div className="text-2xl">{difficulty.icon}</div>
                       <div className="flex-1 min-w-0">
-                        <div className={`text-sm font-semibold ${
-                          currentDifficulty === difficulty.id
-                            ? 'text-white'
-                            : 'text-gray-900 dark:text-white'
-                        }`}>
+                        <div
+                          className={`text-sm font-semibold ${
+                            currentDifficulty === difficulty.id
+                              ? 'text-white'
+                              : 'text-gray-900 dark:text-white'
+                          }`}
+                        >
                           {tDifficulty(`${difficulty.id}.name`)}
                         </div>
-                        <div className={`text-xs truncate ${
-                          currentDifficulty === difficulty.id
-                            ? 'text-blue-100'
-                            : 'text-gray-600 dark:text-gray-300'
-                        }`}>
+                        <div
+                          className={`text-xs truncate ${
+                            currentDifficulty === difficulty.id
+                              ? 'text-blue-100'
+                              : 'text-gray-600 dark:text-gray-300'
+                          }`}
+                        >
                           {tDifficulty(`${difficulty.id}.description`)}
                         </div>
                       </div>
@@ -172,7 +186,11 @@ export function SettingsModal({
                     {currentDifficulty === difficulty.id && (
                       <div className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                         <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                       </div>
                     )}

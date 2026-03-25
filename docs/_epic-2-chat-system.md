@@ -30,6 +30,7 @@ Build the core chat interface using Vercel AI SDK's `useChat` hook, including me
 ## User Stories
 
 ### Story 2.1: Chat UI Components with Vercel AI SDK
+
 **File:** `docs/stories/story-2.1-chat-ui.md`
 **Estimated Time:** 3 hours
 **Agent Assignment:** Frontend DEV Agent #1
@@ -40,6 +41,7 @@ Build ChatContainer, MessageBubble (user/assistant variants), and MessageList co
 ---
 
 ### Story 2.2: Chat Input Component
+
 **File:** `docs/stories/story-2.2-chat-input.md`
 **Estimated Time:** 2 hours
 **Agent Assignment:** Frontend DEV Agent #2 (parallel)
@@ -50,6 +52,7 @@ Create ChatInput component with textarea, send button, keyboard shortcuts (Enter
 ---
 
 ### Story 2.3: OpenAI API Integration with Streaming
+
 **File:** `docs/stories/story-2.3-openai-api.md`
 **Estimated Time:** 3.5 hours
 **Agent Assignment:** Backend DEV Agent #3 (parallel)
@@ -62,12 +65,14 @@ Create `app/api/chat/route.ts` using Vercel AI SDK patterns. Implement OpenAI cl
 ## Technical Specifications
 
 ### Key Technologies
+
 - **Vercel AI SDK:** `useChat` hook for state management
 - **OpenAI SDK:** GPT-4 model with streaming
 - **Next.js API Routes:** Edge runtime for API endpoints
 - **React:** Functional components with hooks
 
 ### Component Structure
+
 ```
 components/chat/
   ├── ChatContainer.tsx       # Main wrapper
@@ -77,6 +82,7 @@ components/chat/
 ```
 
 ### API Route Structure
+
 ```typescript
 // app/api/chat/route.ts
 export async function POST(req: Request) {
@@ -94,15 +100,16 @@ export async function POST(req: Request) {
 ```
 
 ### State Management with useChat
+
 ```typescript
 const {
-  messages,           // Array of all messages
-  input,              // Current input value
-  handleInputChange,  // Input change handler
-  handleSubmit,       // Form submit handler
-  isLoading           // Loading state
+  messages, // Array of all messages
+  input, // Current input value
+  handleInputChange, // Input change handler
+  handleSubmit, // Form submit handler
+  isLoading, // Loading state
 } = useChat({
-  api: '/api/chat'
+  api: '/api/chat',
 });
 ```
 
@@ -126,6 +133,7 @@ const {
 ## Files to Create/Modify
 
 ### New Files
+
 - `app/api/chat/route.ts` (API route)
 - `app/page.tsx` (main chat page)
 - `components/chat/ChatContainer.tsx`
@@ -136,6 +144,7 @@ const {
 - `types/conversation.ts`
 
 ### Dependencies
+
 ```json
 {
   "ai": "^latest",

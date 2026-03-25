@@ -3,10 +3,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 export interface UseTextToSpeechOptions {
-  rate?: number;     // 0.1 to 10 (default 1)
-  pitch?: number;    // 0 to 2 (default 1)
-  volume?: number;   // 0 to 1 (default 1)
-  lang?: string;     // 'en-US' etc
+  rate?: number; // 0.1 to 10 (default 1)
+  pitch?: number; // 0 to 2 (default 1)
+  volume?: number; // 0 to 1 (default 1)
+  lang?: string; // 'en-US' etc
   onEnd?: () => void; // Callback when speech ends
   onStart?: () => void; // Callback when speech starts
 }
@@ -73,9 +73,10 @@ export function useTextToSpeech(options: UseTextToSpeechOptions = {}): UseTextTo
 
         // Select a default English voice if available
         if (!selectedVoice && availableVoices.length > 0) {
-          const englishVoice = availableVoices.find(
-            (v) => v.lang.startsWith('en-') && v.default
-          ) || availableVoices.find((v) => v.lang.startsWith('en-')) || availableVoices[0];
+          const englishVoice =
+            availableVoices.find((v) => v.lang.startsWith('en-') && v.default) ||
+            availableVoices.find((v) => v.lang.startsWith('en-')) ||
+            availableVoices[0];
           setSelectedVoice(englishVoice);
         }
       };
@@ -192,75 +193,88 @@ export function useTextToSpeech(options: UseTextToSpeechOptions = {}): UseTextTo
   /**
    * Speak text aloud
    */
-  const speak = useCallback((text: string) => {
-    if (!isSupported || !speechSynthRef.current) {
-      console.warn('Speech synthesis not supported in this browser');
-      return;
-    }
-
-    // Stop any ongoing speech
-    speechSynthRef.current.cancel();
-
-    // Convert LaTeX to readable text
-    const speechText = latexToSpeechText(text);
-
-    // Split into chunks for long text
-    const chunks = splitIntoChunks(speechText);
-
-    // Track which chunk we're on
-    let currentChunkIndex = 0;
-
-    const speakChunk = (chunkText: string, isLast: boolean) => {
-      const utterance = new SpeechSynthesisUtterance(chunkText);
-      utteranceRef.current = utterance;
-
-      // Set speech parameters
-      utterance.rate = rate;
-      utterance.pitch = pitch;
-      utterance.volume = volume;
-      utterance.lang = lang;
-
-      if (selectedVoice) {
-        utterance.voice = selectedVoice;
+  const speak = useCallback(
+    (text: string) => {
+      if (!isSupported || !speechSynthRef.current) {
+        console.warn('Speech synthesis not supported in this browser');
+        return;
       }
 
-      // Event handlers
-      utterance.onstart = () => {
-        if (currentChunkIndex === 0) {
-          setIsSpeaking(true);
-          setIsPaused(false);
-          options.onStart?.();
+      // Stop any ongoing speech
+      speechSynthRef.current.cancel();
+
+      // Convert LaTeX to readable text
+      const speechText = latexToSpeechText(text);
+
+      // Split into chunks for long text
+      const chunks = splitIntoChunks(speechText);
+
+      // Track which chunk we're on
+      let currentChunkIndex = 0;
+
+      const speakChunk = (chunkText: string, isLast: boolean) => {
+        const utterance = new SpeechSynthesisUtterance(chunkText);
+        utteranceRef.current = utterance;
+
+        // Set speech parameters
+        utterance.rate = rate;
+        utterance.pitch = pitch;
+        utterance.volume = volume;
+        utterance.lang = lang;
+
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
         }
-      };
 
-      utterance.onend = () => {
-        currentChunkIndex++;
+        // Event handlers
+        utterance.onstart = () => {
+          if (currentChunkIndex === 0) {
+            setIsSpeaking(true);
+            setIsPaused(false);
+            options.onStart?.();
+          }
+        };
 
-        if (currentChunkIndex < chunks.length) {
-          // Speak next chunk
-          speakChunk(chunks[currentChunkIndex], currentChunkIndex === chunks.length - 1);
-        } else {
-          // All chunks spoken
+        utterance.onend = () => {
+          currentChunkIndex++;
+
+          if (currentChunkIndex < chunks.length) {
+            // Speak next chunk
+            speakChunk(chunks[currentChunkIndex], currentChunkIndex === chunks.length - 1);
+          } else {
+            // All chunks spoken
+            setIsSpeaking(false);
+            setIsPaused(false);
+            utteranceRef.current = null;
+            options.onEnd?.();
+          }
+        };
+
+        utterance.onerror = (event) => {
+          console.error('Speech synthesis error:', event);
           setIsSpeaking(false);
           setIsPaused(false);
           utteranceRef.current = null;
-          options.onEnd?.();
-        }
+        };
+
+        speechSynthRef.current?.speak(utterance);
       };
 
-      utterance.onerror = (event) => {
-        console.error('Speech synthesis error:', event);
-        setIsSpeaking(false);
-        setIsPaused(false);
-        utteranceRef.current = null;
-      };
-
-      speechSynthRef.current?.speak(utterance);
-    };
-
-    // Start speaking the first chunk
-    speakChunk(chunks[0], chunks.length === 1);
-  }, [isSupported, rate, pitch, volume, lang, selectedVoice, options, latexToSpeechText, splitIntoChunks]);
+      // Start speaking the first chunk
+      speakChunk(chunks[0], chunks.length === 1);
+    },
+    [
+      isSupported,
+      rate,
+      pitch,
+      volume,
+      lang,
+      selectedVoice,
+      options,
+      latexToSpeechText,
+      splitIntoChunks,
+    ]
+  );
 
   /**
    * Stop speaking

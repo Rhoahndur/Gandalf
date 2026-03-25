@@ -77,46 +77,54 @@ Located at `utils/whiteboardExport.ts`, this module provides export functions:
 #### Functions
 
 1. **exportToPNG**
+
    ```typescript
    async function exportToPNG(
      elements: readonly ExcalidrawElement[],
      appState: Partial<AppState>,
      files: BinaryFiles | null = null,
      fileName?: string
-   ): Promise<void>
+   ): Promise<void>;
    ```
+
    Exports whiteboard to PNG format and triggers download.
 
 2. **exportToSVG**
+
    ```typescript
    async function exportToSVG(
      elements: readonly ExcalidrawElement[],
      appState: Partial<AppState>,
      files: BinaryFiles | null = null,
      fileName?: string
-   ): Promise<void>
+   ): Promise<void>;
    ```
+
    Exports whiteboard to SVG format and triggers download.
 
 3. **exportToImageBlob**
+
    ```typescript
    async function exportToImageBlob(
      elements: readonly ExcalidrawElement[],
      appState: Partial<AppState>,
      files: BinaryFiles | null = null,
      mimeType: string = 'image/png'
-   ): Promise<Blob>
+   ): Promise<Blob>;
    ```
+
    Returns a Blob for advanced use cases (e.g., uploading to server).
 
 4. **generateWhiteboardFilename**
+
    ```typescript
    function generateWhiteboardFilename(
      conversationTitle?: string,
      timestamp?: number,
      extension: 'png' | 'svg' = 'png'
-   ): string
+   ): string;
    ```
+
    Generates a formatted filename based on conversation context.
 
    Examples:
@@ -129,7 +137,7 @@ Located at `utils/whiteboardExport.ts`, this module provides export functions:
      elements: readonly ExcalidrawElement[],
      appState: Partial<AppState>,
      files: BinaryFiles | null = null
-   ): Promise<void>
+   ): Promise<void>;
    ```
    Copies whiteboard as PNG to the system clipboard.
 
@@ -138,11 +146,13 @@ Located at `utils/whiteboardExport.ts`, this module provides export functions:
 When Agent 1 creates the `WhiteboardCanvas.tsx` component, it should:
 
 1. **Import the controls component:**
+
    ```typescript
    import WhiteboardControls from './WhiteboardControls';
    ```
 
 2. **Maintain state for Excalidraw:**
+
    ```typescript
    const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
    const [elements, setElements] = useState<readonly ExcalidrawElement[]>([]);
@@ -151,6 +161,7 @@ When Agent 1 creates the `WhiteboardCanvas.tsx` component, it should:
    ```
 
 3. **Pass API reference to Excalidraw:**
+
    ```typescript
    <Excalidraw
      ref={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
@@ -191,6 +202,7 @@ The components use Tailwind CSS and are fully responsive:
 You can customize the appearance by:
 
 1. **Adding className prop:**
+
    ```tsx
    <WhiteboardControls className="shadow-lg border-2" ... />
    ```
@@ -209,6 +221,7 @@ You can customize the appearance by:
 - `tailwindcss` - For styling
 
 Optional:
+
 - `lucide-react` - For better icon library (can replace built-in SVG icons)
 
 ## Features
@@ -216,6 +229,7 @@ Optional:
 ### Confirmation Dialog
 
 The clear button shows a custom modal dialog for confirmation:
+
 - Modern, centered modal with overlay
 - Clear warning message
 - Cancel and Confirm buttons
@@ -224,6 +238,7 @@ The clear button shows a custom modal dialog for confirmation:
 ### Loading States
 
 All export operations show loading states:
+
 - Disabled buttons during export
 - Loading spinner animation
 - "Exporting..." text indicator
@@ -231,6 +246,7 @@ All export operations show loading states:
 ### Error Handling
 
 All operations include error handling:
+
 - Try-catch blocks for async operations
 - User-friendly error messages via alerts
 - Console error logging for debugging
