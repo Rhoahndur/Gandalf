@@ -98,31 +98,20 @@ export interface UseVoiceRecognitionReturn {
 export function useVoiceRecognition(
   options: UseVoiceRecognitionOptions = {}
 ): UseVoiceRecognitionReturn {
-  const {
-    lang = 'en-US',
-    continuous = true,
-    interimResults = true,
-    maxAlternatives = 1,
-  } = options;
+  const { lang = 'en-US', continuous = true, interimResults = true, maxAlternatives = 1 } = options;
 
   // State
   const [transcript, setTranscript] = useState<string>('');
   const [isListening, setIsListening] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [isSupported, setIsSupported] = useState<boolean>(false);
+  const [isSupported] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  });
 
   // Refs
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
   const isStartingRef = useRef<boolean>(false);
-
-  // Check browser support on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const SpeechRecognitionConstructor =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      setIsSupported(!!SpeechRecognitionConstructor);
-    }
-  }, []);
 
   // Initialize Speech Recognition
   useEffect(() => {
@@ -130,8 +119,7 @@ export function useVoiceRecognition(
       return;
     }
 
-    const SpeechRecognitionConstructor =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognitionConstructor = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognitionConstructor) {
       return;
@@ -165,7 +153,10 @@ export function useVoiceRecognition(
       } else if (interimTranscript) {
         setTranscript((prev) => {
           // Remove previous interim results and add new ones
-          const finalPart = prev.split(' ').filter((word) => word.trim()).join(' ');
+          const finalPart = prev
+            .split(' ')
+            .filter((word) => word.trim())
+            .join(' ');
           return finalPart ? `${finalPart} ${interimTranscript}` : interimTranscript;
         });
       }
@@ -181,7 +172,9 @@ export function useVoiceRecognition(
       switch (event.error) {
         case 'not-allowed':
         case 'service-not-allowed':
-          setError('Microphone access denied. Please allow microphone permissions in your browser settings.');
+          setError(
+            'Microphone access denied. Please allow microphone permissions in your browser settings.'
+          );
           break;
         case 'no-speech':
           setError('No speech detected. Please try again.');
@@ -199,7 +192,9 @@ export function useVoiceRecognition(
           setError('Speech recognition grammar error.');
           break;
         default:
-          setError(`Speech recognition error: ${event.error}${event.message ? ` - ${event.message}` : ''}`);
+          setError(
+            `Speech recognition error: ${event.error}${event.message ? ` - ${event.message}` : ''}`
+          );
       }
     };
 
@@ -239,7 +234,9 @@ export function useVoiceRecognition(
   // Start listening
   const startListening = useCallback(() => {
     if (!isSupported) {
-      setError('Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.');
+      setError(
+        'Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.'
+      );
       return;
     }
 

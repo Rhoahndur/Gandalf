@@ -3,7 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import type { ConversationMetadata } from '@/types/conversation';
-import { getAllConversationMetadata, deleteConversation, loadConversation } from '@/utils/storageManager';
+import {
+  getAllConversationMetadata,
+  deleteConversation,
+  loadConversation,
+} from '@/utils/storageManager';
 import { exportConversationToPDF } from '@/utils/pdfExport';
 
 interface ConversationSidebarProps {
@@ -24,22 +28,22 @@ export function ConversationSidebar({
   const t = useTranslations('common.sidebar');
   const [conversations, setConversations] = useState<ConversationMetadata[]>([]);
 
+  const loadConversations = () => {
+    const metadata = getAllConversationMetadata();
+    setConversations(metadata);
+  };
+
   // Load conversations on mount AND when sidebar opens
   useEffect(() => {
-    loadConversations();
+    loadConversations(); // eslint-disable-line react-hooks/set-state-in-effect -- Loading from localStorage on mount
   }, []);
 
   // Refresh conversations when sidebar opens
   useEffect(() => {
     if (isOpen) {
-      loadConversations();
+      loadConversations(); // eslint-disable-line react-hooks/set-state-in-effect
     }
   }, [isOpen]);
-
-  const loadConversations = () => {
-    const metadata = getAllConversationMetadata();
-    setConversations(metadata);
-  };
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -106,12 +110,21 @@ export function ConversationSidebar({
           {/* Header */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              <svg
+                className="w-5 h-5 text-blue-600 dark:text-blue-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                />
               </svg>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {t('title')}
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{t('title')}</h2>
             </div>
             <button
               onClick={onClose}
@@ -140,13 +153,22 @@ export function ConversationSidebar({
             {conversations.length === 0 ? (
               <div className="text-center py-12 px-4 animate-in fade-in duration-500">
                 <div className="w-16 h-16 mx-auto mb-3 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  <svg
+                    className="w-8 h-8 text-gray-400 dark:text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                    />
                   </svg>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {t('noConversations')}
-                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{t('noConversations')}</p>
                 <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                   {t('noConversationsSubtext')}
                 </p>
@@ -186,15 +208,37 @@ export function ConversationSidebar({
                       </h3>
                       <div className="flex items-center gap-2 text-xs">
                         <span className="text-gray-600 dark:text-gray-400 flex items-center gap-1">
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
                           </svg>
                           {formatDate(conv.updatedAt)}
                         </span>
                         <span className="text-gray-500 dark:text-gray-500">•</span>
                         <span className="text-gray-600 dark:text-gray-500 flex items-center gap-1">
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                            />
                           </svg>
                           {conv.messageCount}
                         </span>

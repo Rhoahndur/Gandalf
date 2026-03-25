@@ -41,13 +41,17 @@ export function useVoice({
 }: UseVoiceOptions = {}): UseVoiceReturn {
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isSupported, setIsSupported] = useState(false);
+  const [isSupported] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const hasRecognition = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+    const hasSynthesis = 'speechSynthesis' in window;
+    return hasRecognition && hasSynthesis;
+  });
   const [transcript, setTranscript] = useState('');
   const [voicesLoaded, setVoicesLoaded] = useState(false);
 
   // Determine the language to use: recognitionLang from preferences, then lang prop, then default
   const effectiveLang = voicePreferences?.recognitionLang || lang;
-
 
   const recognitionRef = useRef<any>(null);
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -81,22 +85,12 @@ export function useVoice({
     }
   }, []);
 
-  // Check browser support after component mounts (client-side only)
-  useEffect(() => {
-    const hasRecognition = typeof window !== 'undefined' &&
-      ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
-    const hasSynthesis = typeof window !== 'undefined' &&
-      'speechSynthesis' in window;
-
-    const browserSupported = hasRecognition && hasSynthesis;
-    setIsSupported(browserSupported);
-  }, []);
-
   // Initialize speech recognition
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       return;
     }
@@ -142,7 +136,9 @@ export function useVoice({
       // - 'audio-capture': microphone not working
       // - 'network': network error
       if (event.error === 'not-allowed') {
-        alert('Microphone permission denied. Please allow microphone access in your browser settings.');
+        alert(
+          'Microphone permission denied. Please allow microphone access in your browser settings.'
+        );
       }
 
       if (onErrorRef.current) {
@@ -186,8 +182,7 @@ export function useVoice({
 
     try {
       recognitionRef.current.stop();
-    } catch (error) {
-    }
+    } catch (error) {}
   }, [isRecording]);
 
   const toggleRecording = useCallback(() => {
@@ -198,72 +193,77 @@ export function useVoice({
     }
   }, [isRecording, startRecording, stopRecording]);
 
-  const speak = useCallback((text: string) => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+  const speak = useCallback(
+    (text: string) => {
+      if (typeof window === 'undefined' || !window.speechSynthesis) return;
 
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
 
-    // Small delay to ensure cancellation completes
-    setTimeout(() => {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = effectiveLang;
+      // Small delay to ensure cancellation completes
+      setTimeout(() => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = effectiveLang;
 
-      // Apply voice preferences if provided
-      utterance.rate = voicePreferences?.rate ?? 0.9;
-      utterance.pitch = voicePreferences?.pitch ?? 1.0;
-      utterance.volume = (voicePreferences?.volume ?? 100) / 100; // Convert 0-100 to 0-1
+        // Apply voice preferences if provided
+        utterance.rate = voicePreferences?.rate ?? 0.9;
+        utterance.pitch = voicePreferences?.pitch ?? 1.0;
+        utterance.volume = (voicePreferences?.volume ?? 100) / 100; // Convert 0-100 to 0-1
 
-      // Select specific voice if requested
-      if (voicePreferences?.voiceName) {
-        const voices = window.speechSynthesis.getVoices();
-        const selectedVoice = voices.find(v => v.name === voicePreferences.voiceName);
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
+        // Select specific voice if requested
+        if (voicePreferences?.voiceName) {
+          const voices = window.speechSynthesis.getVoices();
+          const selectedVoice = voices.find((v) => v.name === voicePreferences.voiceName);
+          if (selectedVoice) {
+            utterance.voice = selectedVoice;
+          } else {
+            // Fallback: try to find a voice matching the language
+            const languageVoice = voices.find((v) =>
+              v.lang.startsWith(effectiveLang.split('-')[0])
+            );
+            if (languageVoice) {
+              utterance.voice = languageVoice;
+            }
+          }
         } else {
-          // Fallback: try to find a voice matching the language
-          const languageVoice = voices.find(v => v.lang.startsWith(effectiveLang.split('-')[0]));
+          // No voice selected, try to find a good match for the language
+          const voices = window.speechSynthesis.getVoices();
+          const languageVoice = voices.find((v) => v.lang.startsWith(effectiveLang.split('-')[0]));
           if (languageVoice) {
             utterance.voice = languageVoice;
           }
         }
-      } else {
-        // No voice selected, try to find a good match for the language
-        const voices = window.speechSynthesis.getVoices();
-        const languageVoice = voices.find(v => v.lang.startsWith(effectiveLang.split('-')[0]));
-        if (languageVoice) {
-          utterance.voice = languageVoice;
-        }
-      }
 
-      utterance.onstart = () => {
-        setIsSpeaking(true);
-      };
+        utterance.onstart = () => {
+          setIsSpeaking(true);
+        };
 
-      utterance.onend = () => {
-        setIsSpeaking(false);
-      };
+        utterance.onend = () => {
+          setIsSpeaking(false);
+        };
 
-      utterance.onerror = (event) => {
-        setIsSpeaking(false);
+        utterance.onerror = (event) => {
+          setIsSpeaking(false);
 
-        // Only report non-trivial errors
-        if (event.error !== 'interrupted' && event.error !== 'canceled') {
-          if (onErrorRef.current) {
-            onErrorRef.current(new Error(`Speech synthesis failed: ${event.error}`));
+          // Only report non-trivial errors
+          if (event.error !== 'interrupted' && event.error !== 'canceled') {
+            if (onErrorRef.current) {
+              onErrorRef.current(new Error(`Speech synthesis failed: ${event.error}`));
+            }
           }
+        };
+
+        speechSynthesisRef.current = utterance;
+
+        try {
+          window.speechSynthesis.speak(utterance);
+        } catch (error) {
+          setIsSpeaking(false);
         }
-      };
-
-      speechSynthesisRef.current = utterance;
-
-      try {
-        window.speechSynthesis.speak(utterance);
-      } catch (error) {
-        setIsSpeaking(false);
-      }
-    }, 100);
-  }, [effectiveLang, voicePreferences]);
+      }, 100);
+    },
+    [effectiveLang, voicePreferences]
+  );
 
   const stopSpeaking = useCallback(() => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;

@@ -17,7 +17,9 @@ import { WhiteboardCanvas } from '@/components/whiteboard/WhiteboardCanvas';
 interface ChatContainerProps {
   messages: UIMessage[];
   input: string;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
+  ) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   isLoading: boolean;
   selectedImage?: File | null;
@@ -77,7 +79,7 @@ export function ChatContainer({
 
   // Get current problem from last user message
   const currentProblem = useMemo(() => {
-    const lastUserMessage = [...messages].reverse().find(m => m.role === 'user');
+    const lastUserMessage = [...messages].reverse().find((m) => m.role === 'user');
     if (!lastUserMessage?.parts) return '';
     const textPart = lastUserMessage.parts.find((p: any) => p.type === 'text') as any;
     return textPart?.text || '';
@@ -85,7 +87,7 @@ export function ChatContainer({
 
   // Get conversation context (last 10 messages)
   const conversationContext = useMemo(() => {
-    return messages.slice(-10).map(m => {
+    return messages.slice(-10).map((m) => {
       const textPart = m.parts?.find((p: any) => p.type === 'text') as any;
       const text = textPart?.text || '';
       return `${m.role}: ${text}`;
@@ -106,6 +108,7 @@ export function ChatContainer({
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
     if (lastMessage?.role === 'user') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional: reacts to new user message
       setCurrentProblemId(generateProblemId());
       hints.resetHints();
     }
@@ -152,11 +155,7 @@ export function ChatContainer({
             ? 'w-full h-1/2 lg:h-full' // Mobile: full width, half height; Desktop: adjustable width, full height
             : 'w-full h-full'
         }`}
-        style={
-          isWhiteboardOpen && isDesktop
-            ? { width: `${splitWidth}%` }
-            : undefined
-        }
+        style={isWhiteboardOpen && isDesktop ? { width: `${splitWidth}%` } : undefined}
       >
         {/* Messages container - centered with max width */}
         <div className="flex-1 overflow-y-auto">

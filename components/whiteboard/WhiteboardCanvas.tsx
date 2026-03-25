@@ -46,25 +46,27 @@ export function WhiteboardCanvas({
   excalidrawAPIRef,
 }: WhiteboardCanvasProps) {
   const [excalidrawAPI, setExcalidrawAPI] = useState<any | null>(null);
-  const [theme, setTheme] = useState<WhiteboardTheme>('light');
+  const [theme, setTheme] = useState<WhiteboardTheme>(() => {
+    if (typeof document === 'undefined') return 'light';
+    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  });
 
   // Use useCallback for stable ref function - include excalidrawAPIRef in dependencies
-  const excalidrawRefCallback = useCallback((api: any) => {
-    if (api) {
-      setExcalidrawAPI(api);
-      // Also set the parent's ref if provided
-      if (excalidrawAPIRef) {
-        excalidrawAPIRef.current = api;
+  const excalidrawRefCallback = useCallback(
+    (api: any) => {
+      if (api) {
+        setExcalidrawAPI(api);
+        // Also set the parent's ref if provided
+        if (excalidrawAPIRef) {
+          excalidrawAPIRef.current = api;
+        }
       }
-    }
-  }, [excalidrawAPIRef]);
+    },
+    [excalidrawAPIRef]
+  );
 
-  // Detect theme changes from the document
+  // Watch for theme changes from the document
   useEffect(() => {
-    // Check initial theme
-    const isDark = document.documentElement.classList.contains('dark');
-    setTheme(isDark ? 'dark' : 'light');
-
     // Watch for theme changes using MutationObserver
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -117,9 +119,9 @@ export function WhiteboardCanvas({
         .excalidraw-wrapper .excalidraw-hint,
         .excalidraw-wrapper .excalidraw-toast,
         .excalidraw-wrapper .excalidraw__welcome-screen,
-        .excalidraw-wrapper [class*="hint"],
-        .excalidraw-wrapper [class*="toast"],
-        .excalidraw-wrapper [class*="welcome"] {
+        .excalidraw-wrapper [class*='hint'],
+        .excalidraw-wrapper [class*='toast'],
+        .excalidraw-wrapper [class*='welcome'] {
           display: none !important;
         }
       `}</style>
@@ -131,29 +133,29 @@ export function WhiteboardCanvas({
         }}
       >
         <Excalidraw
-            excalidrawAPI={excalidrawRefCallback}
-            onChange={handleChange}
-            initialData={initialData}
-            theme={theme}
-            UIOptions={{
-              canvasActions: {
-                changeViewBackgroundColor: false,
-                clearCanvas: true,
-                export: false, // Hide export to reduce clutter
-                loadScene: false,
-                saveAsImage: false, // Hide save to reduce clutter
-                toggleTheme: null,
-              },
-              tools: {
-                image: false, // Disable image upload
-              },
-              // Hide all dock/welcome screens
-              welcomeScreen: false,
-              dockedSidebarBreakpoint: 0, // Never show sidebar
-            }}
-            renderTopRightUI={() => null}
-            autoFocus={false}
-          />
+          excalidrawAPI={excalidrawRefCallback}
+          onChange={handleChange}
+          initialData={initialData}
+          theme={theme}
+          UIOptions={{
+            canvasActions: {
+              changeViewBackgroundColor: false,
+              clearCanvas: true,
+              export: false, // Hide export to reduce clutter
+              loadScene: false,
+              saveAsImage: false, // Hide save to reduce clutter
+              toggleTheme: null,
+            },
+            tools: {
+              image: false, // Disable image upload
+            },
+            // Hide all dock/welcome screens
+            welcomeScreen: false,
+            dockedSidebarBreakpoint: 0, // Never show sidebar
+          }}
+          renderTopRightUI={() => null}
+          autoFocus={false}
+        />
       </div>
     </div>
   );

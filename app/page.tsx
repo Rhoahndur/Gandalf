@@ -1,20 +1,20 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
-import { useChat } from '@ai-sdk/react'
-import { ChatContainer } from '@/components/chat/ChatContainer'
-import { ConversationSidebar } from '@/components/layout/ConversationSidebar'
-import { Header } from '@/components/layout/Header'
-import { SettingsModal } from '@/components/settings/SettingsModal'
-import { KeyboardShortcutsHelp } from '@/components/ui/KeyboardShortcutsHelp'
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
-import { useLanguage } from '@/contexts/LanguageContext'
-import type { VoiceInputRef } from '@/components/chat/VoiceInput'
-import type { Conversation } from '@/types/conversation'
-import type { DifficultyLevel } from '@/types/difficulty'
-import { DEFAULT_DIFFICULTY } from '@/types/difficulty'
-import type { VoicePreferences } from '@/types/voice'
-import { DEFAULT_VOICE_PREFERENCES } from '@/types/voice'
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useChat } from '@ai-sdk/react';
+import { ChatContainer } from '@/components/chat/ChatContainer';
+import { ConversationSidebar } from '@/components/layout/ConversationSidebar';
+import { Header } from '@/components/layout/Header';
+import { SettingsModal } from '@/components/settings/SettingsModal';
+import { KeyboardShortcutsHelp } from '@/components/ui/KeyboardShortcutsHelp';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useLanguage } from '@/contexts/LanguageContext';
+import type { VoiceInputRef } from '@/components/chat/VoiceInput';
+import type { Conversation } from '@/types/conversation';
+import type { DifficultyLevel } from '@/types/difficulty';
+import { DEFAULT_DIFFICULTY } from '@/types/difficulty';
+import type { VoicePreferences } from '@/types/voice';
+import { DEFAULT_VOICE_PREFERENCES } from '@/types/voice';
 import {
   saveConversation,
   loadConversation,
@@ -29,105 +29,112 @@ import {
   loadVoicePreferences,
   saveWhiteboardPreference,
   loadWhiteboardPreference,
-} from '@/utils/storageManager'
-import {
-  saveWhiteboardState,
-  loadWhiteboardState,
-} from '@/utils/whiteboardStorage'
-import { fileToBase64 } from '@/utils/imageToBase64'
-import { latexToPlainText } from '@/utils/pdfExport'
-import { exportToBlob } from '@excalidraw/excalidraw'
+} from '@/utils/storageManager';
+import { saveWhiteboardState, loadWhiteboardState } from '@/utils/whiteboardStorage';
+import { fileToBase64 } from '@/utils/imageToBase64';
+import { latexToPlainText } from '@/utils/pdfExport';
+import { exportToBlob } from '@excalidraw/excalidraw';
 
 export default function Home() {
   // Language context
-  const { language, setLanguage } = useLanguage()
+  const { language, setLanguage } = useLanguage();
 
-  const [input, setInput] = useState('')
-  const [selectedImage, setSelectedImage] = useState<File | null>(null)
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [isShortcutsHelpOpen, setIsShortcutsHelpOpen] = useState(false)
-  const [showMathKeyboard, setShowMathKeyboard] = useState(false)
+  const [input, setInput] = useState('');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isShortcutsHelpOpen, setIsShortcutsHelpOpen] = useState(false);
+  const [showMathKeyboard, setShowMathKeyboard] = useState(false);
   const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(() => {
     // Load whiteboard preference on mount (runs once)
     if (typeof window !== 'undefined') {
-      return loadWhiteboardPreference()
+      return loadWhiteboardPreference();
     }
-    return false
-  })
-  const [currentConversationId, setCurrentConversationIdState] = useState<string | null>(null)
-  const [conversationTitle, setConversationTitle] = useState('New Conversation')
+    return false;
+  });
+  const [currentConversationId, setCurrentConversationIdState] = useState<string | null>(null);
+  const [conversationTitle, setConversationTitle] = useState('New Conversation');
   const [difficulty, setDifficulty] = useState<DifficultyLevel>(() => {
     // Load difficulty preference on mount (runs once)
     if (typeof window !== 'undefined') {
-      return loadDifficultyPreference()
+      return loadDifficultyPreference();
     }
-    return DEFAULT_DIFFICULTY
-  })
+    return DEFAULT_DIFFICULTY;
+  });
   const [voicePreferences, setVoicePreferences] = useState<VoicePreferences>(() => {
     // Load voice preferences on mount (runs once)
     if (typeof window !== 'undefined') {
-      return loadVoicePreferences()
+      return loadVoicePreferences();
     }
-    return DEFAULT_VOICE_PREFERENCES
-  })
+    return DEFAULT_VOICE_PREFERENCES;
+  });
 
   // Ref for triggering form submission programmatically
-  const formSubmitRef = useRef<() => void>(null)
+  const formSubmitRef = useRef<() => void>(null);
 
   // Ref for voice input control
-  const voiceInputRef = useRef<VoiceInputRef | null>(null)
+  const voiceInputRef = useRef<VoiceInputRef | null>(null);
 
   // Track if user has interacted (needed for browser auto-play restrictions)
-  const [hasUserInteracted, setHasUserInteracted] = useState(false)
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   // Track the last message ID that was read to avoid re-reading
-  const lastReadMessageIdRef = useRef<string | null>(null)
+  const lastReadMessageIdRef = useRef<string | null>(null);
   // Track if we've already marked existing messages as seen
-  const hasMarkedExistingRef = useRef(false)
+  const hasMarkedExistingRef = useRef(false);
 
   // Track whiteboard elements for AI awareness
-  const [whiteboardElements, setWhiteboardElements] = useState<readonly any[]>([])
+  const [whiteboardElements, setWhiteboardElements] = useState<readonly any[]>([]);
 
   // Track whiteboard initial data for persistence
-  const [whiteboardInitialData, setWhiteboardInitialData] = useState<any>(null)
+  const [whiteboardInitialData, setWhiteboardInitialData] = useState<any>(null);
 
   // Handler to update whiteboard elements when they change
   const handleWhiteboardElementsChange = useCallback((elements: readonly any[]) => {
-    setWhiteboardElements(elements)
-  }, [])
+    setWhiteboardElements(elements);
+  }, []);
 
   // Ref to store Excalidraw API for screenshot export
   const excalidrawAPIRef = useRef<any>(null);
 
-  const { messages, sendMessage, status, setMessages } = useChat()
-  const isLoading = status === 'submitted' || status === 'streaming'
+  const { messages, sendMessage, status, setMessages } = useChat();
+  const isLoading = status === 'submitted' || status === 'streaming';
+
+  const startNewConversation = () => {
+    const newId = generateConversationId();
+    setCurrentConversationIdState(newId);
+    setCurrentConversationId(newId);
+    setMessages([]);
+    setConversationTitle('New Conversation');
+  };
 
   // Load conversation on mount
   useEffect(() => {
-    const storedId = getCurrentConversationId()
+    const storedId = getCurrentConversationId();
     if (storedId) {
-      const conversation = loadConversation(storedId)
+      const conversation = loadConversation(storedId);
       if (conversation) {
-        setMessages(conversation.messages)
-        setCurrentConversationIdState(storedId)
-        setConversationTitle(conversation.title)
+        setMessages(conversation.messages);
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Restoring persisted conversation on mount
+        setCurrentConversationIdState(storedId);
+        setConversationTitle(conversation.title);
       } else {
         // Conversation not found, start new
-        startNewConversation()
+        startNewConversation();
       }
     } else {
       // No stored conversation, start new
-      startNewConversation()
+      startNewConversation();
     }
-  }, [setMessages])
+  }, [setMessages]);
 
   // Save conversation whenever messages change
   useEffect(() => {
     if (messages.length > 0 && currentConversationId) {
-      const title = conversationTitle === 'New Conversation'
-        ? generateConversationTitle(messages)
-        : conversationTitle
+      const title =
+        conversationTitle === 'New Conversation'
+          ? generateConversationTitle(messages)
+          : conversationTitle;
 
       const conversation: Conversation = {
         id: currentConversationId,
@@ -135,146 +142,150 @@ export default function Home() {
         messages,
         timestamp: Date.now(),
         updatedAt: Date.now(),
-      }
+      };
 
-      saveConversation(conversation)
-      setConversationTitle(title)
+      saveConversation(conversation);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncing derived title with persisted state
+      setConversationTitle(title);
     }
-  }, [messages, currentConversationId, conversationTitle])
+  }, [messages, currentConversationId, conversationTitle]);
 
   // Save difficulty preference whenever it changes
   useEffect(() => {
-    saveDifficultyPreference(difficulty)
-  }, [difficulty])
+    saveDifficultyPreference(difficulty);
+  }, [difficulty]);
 
   // Save voice preferences whenever they change
   useEffect(() => {
-    saveVoicePreferences(voicePreferences)
-  }, [voicePreferences])
+    saveVoicePreferences(voicePreferences);
+  }, [voicePreferences]);
 
   // Save whiteboard preference whenever it changes
   useEffect(() => {
-    saveWhiteboardPreference(isWhiteboardOpen)
-  }, [isWhiteboardOpen])
+    saveWhiteboardPreference(isWhiteboardOpen);
+  }, [isWhiteboardOpen]);
 
   // Load whiteboard state when conversation changes
   useEffect(() => {
     if (!currentConversationId) {
-      setWhiteboardInitialData(null)
-      return
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Clearing state when no conversation
+      setWhiteboardInitialData(null);
+      return;
     }
 
-    const result = loadWhiteboardState(currentConversationId)
+    const result = loadWhiteboardState(currentConversationId);
     if (result.success && result.data) {
       // Sanitize appState to prevent Excalidraw errors
       const sanitizedAppState = {
         ...result.data.appState,
         // Ensure collaborators is always a Map (Excalidraw expects this)
         collaborators: new Map(),
-      }
+      };
 
       setWhiteboardInitialData({
         elements: result.data.elements,
         appState: sanitizedAppState,
-      })
+      });
     } else {
-      setWhiteboardInitialData(null)
+      setWhiteboardInitialData(null);
     }
-  }, [currentConversationId])
+  }, [currentConversationId]);
 
   // Save whiteboard state whenever elements change
   useEffect(() => {
     if (!currentConversationId || whiteboardElements.length === 0) {
-      return
+      return;
     }
 
     // Get appState from Excalidraw API if available
-    const appState = excalidrawAPIRef.current?.getAppState?.() || {}
+    const appState = excalidrawAPIRef.current?.getAppState?.() || {};
 
     // Filter out fields that don't serialize well to localStorage
     const {
       collaborators,
       // Remove other problematic fields that shouldn't persist
       ...serializableAppState
-    } = appState
+    } = appState;
 
-    saveWhiteboardState(currentConversationId, whiteboardElements, serializableAppState)
-  }, [whiteboardElements, currentConversationId])
+    saveWhiteboardState(currentConversationId, whiteboardElements, serializableAppState);
+  }, [whiteboardElements, currentConversationId]);
 
   // Auto-read AI responses when enabled
   useEffect(() => {
     if (!voicePreferences.autoRead || !voiceInputRef.current) {
       // Reset the marked flag when auto-read is disabled
-      hasMarkedExistingRef.current = false
-      return
+      hasMarkedExistingRef.current = false;
+      return;
     }
 
     // Browser security: can't auto-play audio without user interaction first
     if (!hasUserInteracted) {
       // Only mark existing messages once to avoid repeated logs
       if (!hasMarkedExistingRef.current && messages.length > 0) {
-        console.log('Auto-read enabled: will start reading from next message')
-        const lastMessage = messages[messages.length - 1]
-        lastReadMessageIdRef.current = lastMessage.id
-        hasMarkedExistingRef.current = true
+        console.log('Auto-read enabled: will start reading from next message');
+        const lastMessage = messages[messages.length - 1];
+        lastReadMessageIdRef.current = lastMessage.id;
+        hasMarkedExistingRef.current = true;
       }
-      return
+      return;
     }
 
     // Only auto-read the last message if it's from the assistant
-    const lastMessage = messages[messages.length - 1]
-    if (!lastMessage || lastMessage.role !== 'assistant') return
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage || lastMessage.role !== 'assistant') return;
 
     // Don't read while still loading (streaming)
-    if (isLoading) return
+    if (isLoading) return;
 
     // Skip if we've already read this message
     if (lastReadMessageIdRef.current === lastMessage.id) {
-      return
+      return;
     }
 
     // Extract text content from message parts
     const textContent = lastMessage.parts
       ?.filter((part: any) => part.type === 'text')
       .map((part: any) => part.text)
-      .join(' ')
+      .join(' ');
 
     if (textContent && voiceInputRef.current) {
       // Convert LaTeX to plain text for better speech
-      const cleanedText = latexToPlainText(textContent)
-      console.log('Auto-reading AI response:', cleanedText)
-      voiceInputRef.current.speak(cleanedText)
+      const cleanedText = latexToPlainText(textContent);
+      console.log('Auto-reading AI response:', cleanedText);
+      voiceInputRef.current.speak(cleanedText);
 
       // Mark this message as read
-      lastReadMessageIdRef.current = lastMessage.id
+      lastReadMessageIdRef.current = lastMessage.id;
     }
-  }, [messages, voicePreferences.autoRead, isLoading, hasUserInteracted])
+  }, [messages, voicePreferences.autoRead, isLoading, hasUserInteracted]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value)
-  }
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setInput(e.target.value);
+  };
 
   const handleImageSelect = (file: File | null) => {
-    setSelectedImage(file)
-  }
+    setSelectedImage(file);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!input.trim() && !selectedImage) return
+    e.preventDefault();
+    if (!input.trim() && !selectedImage) return;
 
     // Log current language and difficulty for debugging
-    console.log('[Frontend] Sending message with language:', language, 'difficulty:', difficulty)
+    console.log('[Frontend] Sending message with language:', language, 'difficulty:', difficulty);
     console.log('[Frontend] Whiteboard state:', {
       isWhiteboardOpen,
       whiteboardElementsCount: whiteboardElements.length,
       hasElements: whiteboardElements.length > 0,
-    })
+    });
 
     // If this is the first message in a new conversation, generate ID
     if (!currentConversationId) {
-      const newId = generateConversationId()
-      setCurrentConversationIdState(newId)
-      setCurrentConversationId(newId)
+      const newId = generateConversationId();
+      setCurrentConversationIdState(newId);
+      setCurrentConversationId(newId);
     }
 
     try {
@@ -354,94 +365,84 @@ export default function Home() {
       setInput('');
       setSelectedImage(null);
     } catch (error) {
-      console.error('Failed to send message:', error)
+      console.error('Failed to send message:', error);
       // You might want to show an error message to the user here
     }
-  }
-
-  const startNewConversation = () => {
-    const newId = generateConversationId()
-    setCurrentConversationIdState(newId)
-    setCurrentConversationId(newId)
-    setMessages([])
-    setConversationTitle('New Conversation')
-  }
+  };
 
   const handleSelectConversation = (id: string) => {
-    const conversation = loadConversation(id)
+    const conversation = loadConversation(id);
     if (conversation) {
-      setMessages(conversation.messages)
-      setCurrentConversationIdState(id)
-      setCurrentConversationId(id)
-      setConversationTitle(conversation.title)
+      setMessages(conversation.messages);
+      setCurrentConversationIdState(id);
+      setCurrentConversationId(id);
+      setConversationTitle(conversation.title);
     }
-  }
+  };
 
   const handleNewChat = () => {
-    startNewConversation()
-  }
+    startNewConversation();
+  };
 
   const handleSendMessage = () => {
     // Trigger form submission if there's text or image
     if (formSubmitRef.current && (input.trim() || selectedImage)) {
-      formSubmitRef.current()
+      formSubmitRef.current();
     }
-  }
+  };
 
   const handleToggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const handleCloseModals = () => {
     // Close sidebar and any open modals
-    setIsSidebarOpen(false)
-    setIsSettingsOpen(false)
-    setIsShortcutsHelpOpen(false)
-  }
+    setIsSidebarOpen(false);
+    setIsSettingsOpen(false);
+    setIsShortcutsHelpOpen(false);
+  };
 
   const handleToggleShortcutsHelp = () => {
-    setIsShortcutsHelpOpen(!isShortcutsHelpOpen)
-  }
+    setIsShortcutsHelpOpen(!isShortcutsHelpOpen);
+  };
 
   // Voice input handlers
   const handleToggleMicrophone = () => {
     if (voiceInputRef.current) {
-      voiceInputRef.current.toggleRecording()
+      voiceInputRef.current.toggleRecording();
     }
-  }
+  };
 
   const handleReadLastMessage = () => {
-    if (!voiceInputRef.current) return
+    if (!voiceInputRef.current) return;
 
     // Find last assistant message
-    const lastAssistantMessage = [...messages]
-      .reverse()
-      .find((msg) => msg.role === 'assistant')
+    const lastAssistantMessage = [...messages].reverse().find((msg) => msg.role === 'assistant');
 
     if (lastAssistantMessage && lastAssistantMessage.parts) {
       // Extract text content from message parts
       const textContent = lastAssistantMessage.parts
         .filter((part: any) => part.type === 'text')
         .map((part: any) => part.text)
-        .join(' ')
+        .join(' ');
 
       if (textContent) {
         // Convert LaTeX to plain text for better speech
-        const cleanedText = latexToPlainText(textContent)
-        voiceInputRef.current.speak(cleanedText)
+        const cleanedText = latexToPlainText(textContent);
+        voiceInputRef.current.speak(cleanedText);
       }
     }
-  }
+  };
 
   const handleStopVoice = () => {
     if (voiceInputRef.current) {
-      voiceInputRef.current.stopAll()
+      voiceInputRef.current.stopAll();
     }
-  }
+  };
 
   const handleToggleWhiteboard = () => {
-    setIsWhiteboardOpen(!isWhiteboardOpen)
-  }
+    setIsWhiteboardOpen(!isWhiteboardOpen);
+  };
 
   // Define keyboard shortcuts
   useKeyboardShortcuts({
@@ -470,10 +471,10 @@ export default function Home() {
         action: () => {
           // First try to stop voice if active
           if (voiceInputRef.current?.isRecording || voiceInputRef.current?.isSpeaking) {
-            handleStopVoice()
+            handleStopVoice();
           } else {
             // Otherwise close modals
-            handleCloseModals()
+            handleCloseModals();
           }
         },
       },
@@ -505,7 +506,7 @@ export default function Home() {
       },
     ],
     enabled: true,
-  })
+  });
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950">
@@ -575,5 +576,5 @@ export default function Home() {
         onClose={() => setIsShortcutsHelpOpen(false)}
       />
     </div>
-  )
+  );
 }
