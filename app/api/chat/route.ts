@@ -7,7 +7,11 @@ import type { Language } from '@/types/language';
 import { DEFAULT_LANGUAGE } from '@/types/language';
 import type { SerializedWhiteboard } from '@/types/whiteboard';
 import { serializeWhiteboardForLLM, hasWhiteboardContent } from '@/utils/whiteboardToLLM';
-import { getWhiteboardContextPrompt, WHITEBOARD_AWARENESS_PROMPT } from '@/prompts/whiteboardPrompt';
+import {
+  getWhiteboardContextPrompt,
+  WHITEBOARD_AWARENESS_PROMPT,
+} from '@/prompts/whiteboardPrompt';
+import { TEXT_MODEL, VISION_MODEL } from '@/lib/model';
 
 // Edge runtime for better performance
 export const runtime = 'edge';
@@ -19,12 +23,19 @@ function hasImage(message: any): boolean {
   if (!message.parts || !Array.isArray(message.parts)) {
     return false;
   }
-  return message.parts.some((part: any) =>
-    part.type === 'file' && part.mediaType?.startsWith('image/')
+  return message.parts.some(
+    (part: any) => part.type === 'file' && part.mediaType?.startsWith('image/')
   );
 }
 
 export async function POST(req: Request) {
+  if (!process.env.OPENAI_API_KEY) {
+    return Response.json(
+      { error: 'Server configuration error: OPENAI_API_KEY is not set.' },
+      { status: 500 }
+    );
+  }
+
   try {
     // Parse request body
     const { messages, difficulty, language, whiteboardData } = await req.json();
@@ -57,8 +68,7 @@ export async function POST(req: Request) {
     const modelMessages = convertToModelMessages(contextMessages);
 
     // Select model based on content type
-    // Use gpt-4-turbo for vision capabilities, regular gpt-4-turbo for text-only
-    const modelName = hasImageContent ? 'gpt-4-turbo' : 'gpt-4-turbo';
+    const modelName = hasImageContent ? VISION_MODEL : TEXT_MODEL;
 
     // Build system prompt with whiteboard awareness
     let systemPrompt = getSocraticPrompt(selectedLanguage, difficultyLevel);

@@ -3,8 +3,11 @@ import { generateText } from 'ai';
 import { getHintSystemPrompt } from '@/prompts/hintPrompts';
 import type { HintRequest, HintResponse } from '@/types/hints';
 import type { DifficultyLevel } from '@/types/difficulty';
+import { DIFFICULTY_CONFIGS } from '@/types/difficulty';
 import type { Language } from '@/types/language';
+import { LANGUAGE_CONFIGS } from '@/types/language';
 import { MAX_HINT_LEVEL } from '@/types/hints';
+import { TEXT_MODEL } from '@/lib/model';
 
 // Edge runtime for better performance
 export const runtime = 'edge';
@@ -14,6 +17,13 @@ export const runtime = 'edge';
  * Generate a hint at a specific level for a math problem
  */
 export async function POST(req: Request) {
+  if (!process.env.OPENAI_API_KEY) {
+    return Response.json(
+      { error: 'Server configuration error: OPENAI_API_KEY is not set.' },
+      { status: 500 }
+    );
+  }
+
   try {
     // Parse request body
     const body: HintRequest = await req.json();
@@ -21,17 +31,11 @@ export async function POST(req: Request) {
 
     // Validate required fields
     if (!currentProblem || currentProblem.trim() === '') {
-      return Response.json(
-        { error: 'currentProblem is required' },
-        { status: 400 }
-      );
+      return Response.json({ error: 'currentProblem is required' }, { status: 400 });
     }
 
     if (currentLevel === undefined || currentLevel === null) {
-      return Response.json(
-        { error: 'currentLevel is required' },
-        { status: 400 }
-      );
+      return Response.json({ error: 'currentLevel is required' }, { status: 400 });
     }
 
     // Validate hint level range
@@ -43,21 +47,13 @@ export async function POST(req: Request) {
     }
 
     // Validate difficulty level
-    const validDifficulties: DifficultyLevel[] = ['elementary', 'middle-school', 'high-school', 'college'];
-    if (!validDifficulties.includes(difficulty as DifficultyLevel)) {
-      return Response.json(
-        { error: 'Invalid difficulty level' },
-        { status: 400 }
-      );
+    if (!(difficulty in DIFFICULTY_CONFIGS)) {
+      return Response.json({ error: 'Invalid difficulty level' }, { status: 400 });
     }
 
     // Validate language
-    const validLanguages: Language[] = ['en', 'es', 'fr', 'de', 'zh', 'ja'];
-    if (!validLanguages.includes(language as Language)) {
-      return Response.json(
-        { error: 'Invalid language' },
-        { status: 400 }
-      );
+    if (!(language in LANGUAGE_CONFIGS)) {
+      return Response.json({ error: 'Invalid language' }, { status: 400 });
     }
 
     // Log hint generation request
@@ -78,9 +74,8 @@ export async function POST(req: Request) {
       conversationContext || []
     );
 
-    // Use GPT-4 Turbo for hint generation
     const result = await generateText({
-      model: openai('gpt-4-turbo'),
+      model: openai(TEXT_MODEL),
       prompt: systemPrompt,
       temperature: 0.7,
     });
@@ -113,18 +108,12 @@ export async function POST(req: Request) {
 
       if (error.message.includes('API key')) {
         console.error('[API Hints] OpenAI API key error');
-        return Response.json(
-          { error: 'API configuration error' },
-          { status: 500 }
-        );
+        return Response.json({ error: 'API configuration error' }, { status: 500 });
       }
     }
 
     // Generic error response
-    return Response.json(
-      { error: 'Failed to generate hint. Please try again.' },
-      { status: 500 }
-    );
+    return Response.json({ error: 'Failed to generate hint. Please try again.' }, { status: 500 });
   }
 }
 
