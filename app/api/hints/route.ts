@@ -1,4 +1,3 @@
-import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { getHintSystemPrompt } from '@/prompts/hintPrompts';
 import type { HintRequest, HintResponse } from '@/types/hints';
@@ -6,8 +5,9 @@ import type { DifficultyLevel } from '@/types/difficulty';
 import { DIFFICULTY_CONFIGS } from '@/types/difficulty';
 import type { Language } from '@/types/language';
 import { LANGUAGE_CONFIGS } from '@/types/language';
+import type { HintLevel } from '@/types/hints';
 import { MAX_HINT_LEVEL } from '@/types/hints';
-import { TEXT_MODEL } from '@/lib/model';
+import { aiProvider, TEXT_MODEL, hasApiKey } from '@/lib/ai-provider';
 
 // Edge runtime for better performance
 export const runtime = 'edge';
@@ -17,9 +17,12 @@ export const runtime = 'edge';
  * Generate a hint at a specific level for a math problem
  */
 export async function POST(req: Request) {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!hasApiKey()) {
     return Response.json(
-      { error: 'Server configuration error: OPENAI_API_KEY is not set.' },
+      {
+        error:
+          'Server configuration error: No AI provider API key is set. Set OPENROUTER_API_KEY or OPENAI_API_KEY.',
+      },
       { status: 500 }
     );
   }
@@ -56,26 +59,17 @@ export async function POST(req: Request) {
       return Response.json({ error: 'Invalid language' }, { status: 400 });
     }
 
-    // Log hint generation request
-    console.log('[API Hints] Generating hint:', {
-      level: currentLevel,
-      difficulty,
-      language,
-      problemLength: currentProblem.length,
-      contextLength: conversationContext?.length || 0,
-    });
-
     // Generate hint using AI
     const systemPrompt = getHintSystemPrompt(
       language as Language,
-      currentLevel as any,
+      currentLevel as HintLevel,
       difficulty as DifficultyLevel,
       currentProblem,
       conversationContext || []
     );
 
     const result = await generateText({
-      model: openai(TEXT_MODEL),
+      model: aiProvider(TEXT_MODEL),
       prompt: systemPrompt,
       temperature: 0.7,
     });
@@ -83,21 +77,15 @@ export async function POST(req: Request) {
     // Build response
     const response: HintResponse = {
       hint: result.text,
-      level: currentLevel as any,
+      level: currentLevel as HintLevel,
       hasNext: currentLevel < MAX_HINT_LEVEL,
     };
-
-    console.log('[API Hints] Hint generated successfully:', {
-      level: currentLevel,
-      hasNext: response.hasNext,
-      hintLength: result.text.length,
-    });
 
     return Response.json(response);
   } catch (error) {
     console.error('[API Hints] Error generating hint:', error);
 
-    // Check for OpenAI API errors
+    // Check for API errors
     if (error instanceof Error) {
       if (error.message.includes('rate limit')) {
         return Response.json(
@@ -107,7 +95,7 @@ export async function POST(req: Request) {
       }
 
       if (error.message.includes('API key')) {
-        console.error('[API Hints] OpenAI API key error');
+        console.error('[API Hints] API key error');
         return Response.json({ error: 'API configuration error' }, { status: 500 });
       }
     }

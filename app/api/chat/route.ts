@@ -1,4 +1,3 @@
-import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages } from 'ai';
 import { getSocraticPrompt } from '@/prompts/socraticPrompts';
 import type { DifficultyLevel } from '@/types/difficulty';
@@ -11,7 +10,7 @@ import {
   getWhiteboardContextPrompt,
   WHITEBOARD_AWARENESS_PROMPT,
 } from '@/prompts/whiteboardPrompt';
-import { TEXT_MODEL, VISION_MODEL } from '@/lib/model';
+import { aiProvider, TEXT_MODEL, VISION_MODEL, hasApiKey } from '@/lib/ai-provider';
 
 // Edge runtime for better performance
 export const runtime = 'edge';
@@ -19,19 +18,20 @@ export const runtime = 'edge';
 /**
  * Check if a message contains an image file
  */
-function hasImage(message: any): boolean {
+function hasImage(message: { parts?: Array<{ type: string; mediaType?: string }> }): boolean {
   if (!message.parts || !Array.isArray(message.parts)) {
     return false;
   }
-  return message.parts.some(
-    (part: any) => part.type === 'file' && part.mediaType?.startsWith('image/')
-  );
+  return message.parts.some((part) => part.type === 'file' && part.mediaType?.startsWith('image/'));
 }
 
 export async function POST(req: Request) {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!hasApiKey()) {
     return Response.json(
-      { error: 'Server configuration error: OPENAI_API_KEY is not set.' },
+      {
+        error:
+          'Server configuration error: No AI provider API key is set. Set OPENROUTER_API_KEY or OPENAI_API_KEY.',
+      },
       { status: 500 }
     );
   }
@@ -54,12 +54,10 @@ export async function POST(req: Request) {
     // Extract whiteboard data if present
     const whiteboard: SerializedWhiteboard | null = whiteboardData || null;
 
-    // Log the selected language for debugging
-    console.log('[API] Selected language:', selectedLanguage, 'Difficulty:', difficultyLevel);
-    console.log('[API] Whiteboard data present:', hasWhiteboardContent(whiteboard));
-
     // Check if any message contains an image
-    const hasImageContent = messages.some((msg: any) => hasImage(msg));
+    const hasImageContent = messages.some(
+      (msg: { parts?: Array<{ type: string; mediaType?: string }> }) => hasImage(msg)
+    );
 
     // Limit context to last 15 messages to prevent token overflow
     const contextMessages = messages.slice(-15);
@@ -86,7 +84,7 @@ export async function POST(req: Request) {
 
     // Create streaming response using AI SDK with difficulty-aware and language-aware prompt
     const result = streamText({
-      model: openai(modelName),
+      model: aiProvider(modelName),
       system: systemPrompt,
       messages: modelMessages,
       temperature: 0.7,
@@ -95,7 +93,7 @@ export async function POST(req: Request) {
     // Return streaming response for useChat hook
     return result.toUIMessageStreamResponse();
   } catch (error) {
-    console.error('OpenAI API error:', error);
+    console.error('AI provider error:', error);
     return new Response('Internal server error', { status: 500 });
   }
 }
