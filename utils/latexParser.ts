@@ -100,14 +100,3 @@ export function parseLatex(text: string): ParsedSegment[] {
 export function hasLatex(text: string): boolean {
   return /\$\$[^\$]+?\$\$|\\\[.+?\\\]|\$[^\$]+?\$|\\\(.+?\\\)/.test(text);
 }
-
-/**
- * Escapes special characters in text for safe HTML rendering
- * @param text - The text to escape
- * @returns Escaped text
- */
-export function escapeHtml(text: string): string {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}

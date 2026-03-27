@@ -81,32 +81,3 @@ export function isMac(): boolean {
 export function getModifierKey(): string {
   return isMac() ? '⌘' : 'Ctrl';
 }
-
-/**
- * Format a shortcut for display
- */
-export function formatShortcut(shortcut: KeyboardShortcut): string {
-  const parts: string[] = [];
-
-  if (shortcut.ctrlOrCmd) {
-    parts.push(getModifierKey());
-  }
-  if (shortcut.ctrl) {
-    parts.push('Ctrl');
-  }
-  if (shortcut.shift) {
-    parts.push('Shift');
-  }
-  if (shortcut.alt) {
-    parts.push(isMac() ? 'Option' : 'Alt');
-  }
-
-  // Capitalize first letter of key
-  const key =
-    shortcut.key === 'Escape'
-      ? 'Esc'
-      : shortcut.key.charAt(0).toUpperCase() + shortcut.key.slice(1);
-  parts.push(key);
-
-  return parts.join('+');
-}

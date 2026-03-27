@@ -153,15 +153,6 @@ export function incrementHintLevel(conversationId: string, problemId: string): n
   }
 }
 
-// Clear all hints (for reset/debugging)
-export function clearAllHints(): void {
-  try {
-    localStorage.removeItem(HINT_STORAGE_KEY);
-  } catch (error) {
-    console.error('Failed to clear all hints:', error);
-  }
-}
-
 // Get all hint states for a conversation
 export function getConversationHints(conversationId: string): HintState[] {
   try {

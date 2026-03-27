@@ -221,32 +221,3 @@ export function serializeWhiteboardForLLM(elements: WhiteboardElement[]): string
 export function hasWhiteboardContent(data: SerializedWhiteboard | null | undefined): boolean {
   return !!data && Array.isArray(data.elements) && data.elements.length > 0;
 }
-
-/**
- * Extract all text labels and annotations from whiteboard
- * Useful for extracting mathematical expressions or equations
- */
-export function extractWhiteboardText(elements: WhiteboardElement[]): string[] {
-  const textItems: string[] = [];
-
-  elements.forEach((element) => {
-    if (element.text) textItems.push(element.text);
-    if (element.label) textItems.push(element.label);
-  });
-
-  return textItems;
-}
-
-/**
- * Identify if whiteboard contains geometric shapes (useful for geometry problems)
- */
-export function hasGeometricShapes(elements: WhiteboardElement[]): boolean {
-  return elements.some(
-    (el) =>
-      el.type === 'rectangle' ||
-      el.type === 'ellipse' ||
-      el.type === 'diamond' ||
-      el.type === 'line' ||
-      el.type === 'arrow'
-  );
-}
