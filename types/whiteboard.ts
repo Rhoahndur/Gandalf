@@ -95,15 +95,15 @@ export interface WhiteboardIndex {
 // ExcalidrawImperativeAPI) can't be imported due to module resolution — the
 // package doesn't re-export them from its public entry point.  These aliases
 // centralise the unavoidable `any` so consuming code stays self-documenting.
- 
+
 export type ExcalidrawElementData = any;
- 
+
 export type ExcalidrawAppStateData = any;
- 
+
 export type ExcalidrawInitialData = any;
- 
+
 export type ExcalidrawBinaryFiles = any;
- 
+
 export type ExcalidrawAPI = any;
 
 /**
