@@ -16,8 +16,7 @@ export function ImagePreview({ file, imageUrl, onRemove }: ImagePreviewProps) {
             src={imageUrl}
             alt="Upload preview"
             className="w-full h-full object-cover"
-            onLoad={() => console.log('Image loaded successfully:', imageUrl)}
-            onError={(e) => {
+            onError={() => {
               console.error('Image preview failed to load:', imageUrl);
             }}
           />

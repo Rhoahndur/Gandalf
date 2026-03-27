@@ -26,12 +26,6 @@ export function VoiceSettings({
   useEffect(() => {
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
-      console.log(
-        '[VoiceSettings] Loaded voices:',
-        voices.length,
-        'Current recognition language:',
-        preferences.recognitionLang
-      );
       setAvailableVoices(voices);
 
       // If no voice is selected or selected voice doesn't match current language, set a default
@@ -44,12 +38,6 @@ export function VoiceSettings({
           const matchingVoice = voices.find((v) => v.lang.startsWith(currentLangPrefix));
           const defaultVoice = matchingVoice || voices[0];
 
-          console.log(
-            '[VoiceSettings] Setting default voice:',
-            defaultVoice.name,
-            'for language:',
-            preferences.recognitionLang
-          );
           onPreferencesChange({
             ...preferences,
             voiceName: defaultVoice.name,
@@ -114,15 +102,8 @@ export function VoiceSettings({
     const newLang = e.target.value;
     const newLangPrefix = newLang.split('-')[0];
 
-    console.log('[VoiceSettings] Language changed to:', newLang);
-
     // Find a voice matching the new language
     const matchingVoice = availableVoices.find((v) => v.lang.startsWith(newLangPrefix));
-
-    console.log(
-      '[VoiceSettings] Auto-selecting voice for new language:',
-      matchingVoice?.name || 'none found'
-    );
 
     onPreferencesChange({
       ...preferences,
@@ -177,13 +158,6 @@ export function VoiceSettings({
       return acc;
     },
     {} as Record<string, SpeechSynthesisVoice[]>
-  );
-
-  console.log(
-    '[VoiceSettings] Voices filtered - Current language:',
-    currentLangVoices.length,
-    'Others:',
-    otherVoices.length
   );
 
   return (
