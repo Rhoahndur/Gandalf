@@ -62,13 +62,10 @@ export function ChatInput({
 
       // Compress image
       setIsCompressing(true);
-      console.log('Compressing image:', file.name, 'size:', file.size);
       const compressedFile = await compressImage(file);
-      console.log('Compressed to:', compressedFile.size);
 
       // Create preview URL from compressed file
       const previewUrl = URL.createObjectURL(compressedFile);
-      console.log('Created preview URL:', previewUrl);
       setImagePreviewUrl(previewUrl);
       onImageSelect(compressedFile);
     } catch (err) {
@@ -194,13 +191,8 @@ export function ChatInput({
     if (formSubmitRef) {
       formSubmitRef.current = () => {
         if (!input.trim() && !selectedImage) return;
-        // Create a synthetic form event
-        const syntheticEvent = new Event('submit', { bubbles: true, cancelable: true });
-        Object.defineProperty(syntheticEvent, 'preventDefault', {
-          value: () => {},
-          writable: true,
-        });
-        handleFormSubmit(syntheticEvent as any);
+        // handleFormSubmit only uses preventDefault() from the event
+        handleFormSubmit({ preventDefault() {} } as FormEvent<HTMLFormElement>);
       };
     }
   }, [input, selectedImage, formSubmitRef]);
@@ -317,7 +309,7 @@ export function ChatInput({
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                handleFormSubmit(e as any);
+                handleFormSubmit({ preventDefault() {} } as FormEvent<HTMLFormElement>);
               }
             }}
             aria-label={t('messageInputAriaLabel')}

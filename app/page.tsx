@@ -34,6 +34,9 @@ import { saveWhiteboardState, loadWhiteboardState } from '@/utils/whiteboardStor
 import { fileToBase64 } from '@/utils/imageToBase64';
 import { latexToPlainText } from '@/utils/pdfExport';
 import { exportToBlob } from '@excalidraw/excalidraw';
+import type { ExcalidrawElementData, ExcalidrawAPI, WhiteboardState } from '@/types/whiteboard';
+import type { TextUIPart, FileUIPart } from 'ai';
+import { isTextUIPart } from 'ai';
 
 export default function Home() {
   // Language context
@@ -84,18 +87,23 @@ export default function Home() {
   const hasMarkedExistingRef = useRef(false);
 
   // Track whiteboard elements for AI awareness
-  const [whiteboardElements, setWhiteboardElements] = useState<readonly any[]>([]);
+  const [whiteboardElements, setWhiteboardElements] = useState<readonly ExcalidrawElementData[]>(
+    []
+  );
 
   // Track whiteboard initial data for persistence
-  const [whiteboardInitialData, setWhiteboardInitialData] = useState<any>(null);
+  const [whiteboardInitialData, setWhiteboardInitialData] = useState<WhiteboardState | null>(null);
 
   // Handler to update whiteboard elements when they change
-  const handleWhiteboardElementsChange = useCallback((elements: readonly any[]) => {
-    setWhiteboardElements(elements);
-  }, []);
+  const handleWhiteboardElementsChange = useCallback(
+    (elements: readonly ExcalidrawElementData[]) => {
+      setWhiteboardElements(elements);
+    },
+    []
+  );
 
   // Ref to store Excalidraw API for screenshot export
-  const excalidrawAPIRef = useRef<any>(null);
+  const excalidrawAPIRef = useRef<ExcalidrawAPI | null>(null);
 
   const { messages, sendMessage, status, setMessages } = useChat();
   const isLoading = status === 'submitted' || status === 'streaming';
@@ -222,7 +230,6 @@ export default function Home() {
     if (!hasUserInteracted) {
       // Only mark existing messages once to avoid repeated logs
       if (!hasMarkedExistingRef.current && messages.length > 0) {
-        console.log('Auto-read enabled: will start reading from next message');
         const lastMessage = messages[messages.length - 1];
         lastReadMessageIdRef.current = lastMessage.id;
         hasMarkedExistingRef.current = true;
@@ -244,14 +251,13 @@ export default function Home() {
 
     // Extract text content from message parts
     const textContent = lastMessage.parts
-      ?.filter((part: any) => part.type === 'text')
-      .map((part: any) => part.text)
+      ?.filter(isTextUIPart)
+      .map((part) => part.text)
       .join(' ');
 
     if (textContent && voiceInputRef.current) {
       // Convert LaTeX to plain text for better speech
       const cleanedText = latexToPlainText(textContent);
-      console.log('Auto-reading AI response:', cleanedText);
       voiceInputRef.current.speak(cleanedText);
 
       // Mark this message as read
@@ -272,14 +278,6 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim() && !selectedImage) return;
-
-    // Log current language and difficulty for debugging
-    console.log('[Frontend] Sending message with language:', language, 'difficulty:', difficulty);
-    console.log('[Frontend] Whiteboard state:', {
-      isWhiteboardOpen,
-      whiteboardElementsCount: whiteboardElements.length,
-      hasElements: whiteboardElements.length > 0,
-    });
 
     // If this is the first message in a new conversation, generate ID
     if (!currentConversationId) {
@@ -321,7 +319,7 @@ export default function Home() {
       }
 
       // Build message parts
-      const messageParts: any[] = [];
+      const messageParts: (TextUIPart | FileUIPart)[] = [];
 
       // Add text content
       let textContent = input.trim();
@@ -422,8 +420,8 @@ export default function Home() {
     if (lastAssistantMessage && lastAssistantMessage.parts) {
       // Extract text content from message parts
       const textContent = lastAssistantMessage.parts
-        .filter((part: any) => part.type === 'text')
-        .map((part: any) => part.text)
+        .filter(isTextUIPart)
+        .map((part) => part.text)
         .join(' ');
 
       if (textContent) {

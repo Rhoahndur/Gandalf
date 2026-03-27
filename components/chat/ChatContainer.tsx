@@ -1,4 +1,5 @@
-import type { UIMessage } from '@ai-sdk/react';
+import type { UIMessage } from 'ai';
+import { isTextUIPart } from 'ai';
 import type { MutableRefObject } from 'react';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { MessageList } from './MessageList';
@@ -7,6 +8,11 @@ import type { VoiceInputRef } from './VoiceInput';
 import type { VoicePreferences } from '@/types/voice';
 import type { DifficultyLevel } from '@/types/difficulty';
 import type { Language } from '@/types/language';
+import type {
+  ExcalidrawElementData,
+  ExcalidrawInitialData,
+  ExcalidrawAPI,
+} from '@/types/whiteboard';
 import { HintButton } from '@/components/hints/HintButton';
 import { HintPanel } from '@/components/hints/HintPanel';
 import { useHints } from '@/hooks/useHints';
@@ -32,9 +38,9 @@ interface ChatContainerProps {
   difficulty?: DifficultyLevel;
   language?: Language;
   isWhiteboardOpen?: boolean;
-  onWhiteboardElementsChange?: (elements: readonly any[]) => void;
-  excalidrawAPIRef?: MutableRefObject<any>;
-  whiteboardInitialData?: any;
+  onWhiteboardElementsChange?: (elements: readonly ExcalidrawElementData[]) => void;
+  excalidrawAPIRef?: MutableRefObject<ExcalidrawAPI | null>;
+  whiteboardInitialData?: ExcalidrawInitialData;
 }
 
 export function ChatContainer({
@@ -81,14 +87,14 @@ export function ChatContainer({
   const currentProblem = useMemo(() => {
     const lastUserMessage = [...messages].reverse().find((m) => m.role === 'user');
     if (!lastUserMessage?.parts) return '';
-    const textPart = lastUserMessage.parts.find((p: any) => p.type === 'text') as any;
+    const textPart = lastUserMessage.parts.find(isTextUIPart);
     return textPart?.text || '';
   }, [messages]);
 
   // Get conversation context (last 10 messages)
   const conversationContext = useMemo(() => {
     return messages.slice(-10).map((m) => {
-      const textPart = m.parts?.find((p: any) => p.type === 'text') as any;
+      const textPart = m.parts?.find(isTextUIPart);
       const text = textPart?.text || '';
       return `${m.role}: ${text}`;
     });

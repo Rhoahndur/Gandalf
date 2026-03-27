@@ -54,16 +54,16 @@ export interface ExcalidrawAppState {
   viewBackgroundColor?: string;
   currentItemStrokeColor?: string;
   currentItemBackgroundColor?: string;
-  currentItemFillStyle?: 'solid' | 'hachure' | 'cross-hatch' | 'dots';
+  currentItemFillStyle?: string;
   currentItemStrokeWidth?: number;
-  currentItemStrokeStyle?: 'solid' | 'dashed' | 'dotted';
+  currentItemStrokeStyle?: string;
   currentItemRoughness?: number;
   currentItemOpacity?: number;
   gridSize?: number | null;
   zoom?: { value: number };
   scrollX?: number;
   scrollY?: number;
-  [key: string]: any; // Allow for additional Excalidraw properties
+  [key: string]: unknown; // Allow for additional Excalidraw properties
 }
 
 // Storage data structure for localStorage
@@ -91,19 +91,28 @@ export interface WhiteboardIndex {
  * Excalidraw Component Types
  */
 
-// Import Excalidraw types
-// NOTE: These imports are commented out due to TypeScript module resolution issues
-// Components use 'any' types internally to avoid import complexities
-// import type { AppState, BinaryFiles } from '@excalidraw/excalidraw/types/types';
-// import type { ExcalidrawElement } from '@excalidraw/excalidraw/types/element/types';
+// Excalidraw's internal types (ExcalidrawElement, AppState, BinaryFiles,
+// ExcalidrawImperativeAPI) can't be imported due to module resolution — the
+// package doesn't re-export them from its public entry point.  These aliases
+// centralise the unavoidable `any` so consuming code stays self-documenting.
+ 
+export type ExcalidrawElementData = any;
+ 
+export type ExcalidrawAppStateData = any;
+ 
+export type ExcalidrawInitialData = any;
+ 
+export type ExcalidrawBinaryFiles = any;
+ 
+export type ExcalidrawAPI = any;
 
 /**
  * Represents the state of the whiteboard including all elements and metadata
  */
 export interface WhiteboardState {
-  elements: readonly any[];
-  appState?: Partial<any>;
-  files?: any;
+  elements: readonly ExcalidrawElementData[];
+  appState?: Partial<ExcalidrawAppState>;
+  files?: ExcalidrawBinaryFiles;
 }
 
 /**
@@ -111,13 +120,17 @@ export interface WhiteboardState {
  */
 export interface WhiteboardCanvasProps {
   /** Callback when elements change (drawing, deleting, etc.) */
-  onElementsChange?: (elements: readonly any[]) => void;
+  onElementsChange?: (elements: readonly ExcalidrawElementData[]) => void;
 
   /** Callback when the full scene changes */
-  onSceneChange?: (elements: readonly any[], appState: any, files: any) => void;
+  onSceneChange?: (
+    elements: readonly ExcalidrawElementData[],
+    appState: ExcalidrawAppStateData,
+    files: ExcalidrawBinaryFiles
+  ) => void;
 
   /** Initial whiteboard data to load */
-  initialData?: WhiteboardState;
+  initialData?: ExcalidrawInitialData;
 
   /** Whether the whiteboard is currently visible */
   isVisible?: boolean;
@@ -191,24 +204,17 @@ export type WhiteboardTheme = 'light' | 'dark';
  */
 
 /**
- * Re-export ExcalidrawImperativeAPI for controls
- * NOTE: Commented out due to TypeScript module resolution issues
- */
-// import type { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types/types';
-// export type { ExcalidrawImperativeAPI };
-
-/**
  * Props for WhiteboardControls component
  */
 export interface WhiteboardControlsProps {
   /** Excalidraw API reference for controlling the whiteboard */
-  excalidrawAPI: any | null;
+  excalidrawAPI: ExcalidrawAPI | null;
   /** Current whiteboard elements */
-  elements: readonly any[];
+  elements: readonly ExcalidrawElementData[];
   /** Current app state */
-  appState: Partial<any>;
+  appState: Partial<ExcalidrawAppState>;
   /** Binary files (images) in the whiteboard */
-  files: any | null;
+  files: ExcalidrawBinaryFiles | null;
   /** Optional conversation title for filename generation */
   conversationTitle?: string;
   /** Callback when whiteboard is cleared */

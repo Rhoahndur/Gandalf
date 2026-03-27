@@ -1,3 +1,5 @@
+import type { UIMessage } from 'ai';
+import { isTextUIPart } from 'ai';
 import type { Conversation, ConversationMetadata } from '@/types/conversation';
 import type { DifficultyLevel } from '@/types/difficulty';
 import { DEFAULT_DIFFICULTY } from '@/types/difficulty';
@@ -9,7 +11,6 @@ import { DEFAULT_LANGUAGE } from '@/types/language';
 const STORAGE_KEY = 'ai-math-tutor-conversations';
 const CURRENT_CONVERSATION_KEY = 'ai-math-tutor-current-conversation';
 const DIFFICULTY_PREFERENCE_KEY = 'ai-math-tutor-difficulty-preference';
-const TTS_PREFERENCES_KEY = 'ai-math-tutor-tts-preferences';
 const VOICE_PREFERENCES_KEY = 'voice-preferences';
 const LANGUAGE_PREFERENCE_KEY = 'ai-math-tutor-language-preference';
 const WHITEBOARD_PREFERENCE_KEY = 'ai-math-tutor-whiteboard-preference';
@@ -21,19 +22,19 @@ export function generateConversationId(): string {
 
 // Generate a unique problem ID
 export function generateProblemId(): string {
-  return `problem_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `problem_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 }
 
 // Generate a conversation title from the first user message
-export function generateConversationTitle(messages: any[]): string {
+export function generateConversationTitle(messages: UIMessage[]): string {
   const firstUserMessage = messages.find((m) => m.role === 'user');
   if (!firstUserMessage) {
     return 'New Conversation';
   }
 
   // Extract text from parts array (UIMessage structure)
-  const textPart = firstUserMessage.parts?.find((part: any) => part.type === 'text');
-  const content = textPart && 'text' in textPart ? textPart.text : 'New Conversation';
+  const textPart = firstUserMessage.parts?.find(isTextUIPart);
+  const content = textPart?.text || 'New Conversation';
 
   // Truncate to 50 characters and add ellipsis if needed
   return content.length > 50 ? content.substring(0, 47) + '...' : content;
@@ -147,16 +148,6 @@ export function clearCurrentConversation(): void {
   }
 }
 
-// Clear all conversations (for reset/debugging)
-export function clearAllConversations(): void {
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(CURRENT_CONVERSATION_KEY);
-  } catch (error) {
-    console.error('Failed to clear all conversations:', error);
-  }
-}
-
 // Save difficulty preference
 export function saveDifficultyPreference(difficulty: DifficultyLevel): void {
   try {
@@ -180,52 +171,7 @@ export function loadDifficultyPreference(): DifficultyLevel {
   }
 }
 
-// Text-to-Speech Preferences (Legacy - kept for backward compatibility)
-export interface TTSPreferences {
-  enabled: boolean;
-  autoRead: boolean;
-  rate: number;
-  pitch: number;
-  volume: number;
-  voiceName: string | null;
-}
-
-export const DEFAULT_TTS_PREFERENCES: TTSPreferences = {
-  enabled: true,
-  autoRead: false,
-  rate: 1,
-  pitch: 1,
-  volume: 1,
-  voiceName: null,
-};
-
-// Save TTS preferences
-export function saveTTSPreferences(preferences: Partial<TTSPreferences>): void {
-  try {
-    const current = loadTTSPreferences();
-    const updated = { ...current, ...preferences };
-    localStorage.setItem(TTS_PREFERENCES_KEY, JSON.stringify(updated));
-  } catch (error) {
-    console.error('Failed to save TTS preferences:', error);
-  }
-}
-
-// Load TTS preferences
-export function loadTTSPreferences(): TTSPreferences {
-  try {
-    const stored = localStorage.getItem(TTS_PREFERENCES_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return { ...DEFAULT_TTS_PREFERENCES, ...parsed };
-    }
-    return DEFAULT_TTS_PREFERENCES;
-  } catch (error) {
-    console.error('Failed to load TTS preferences:', error);
-    return DEFAULT_TTS_PREFERENCES;
-  }
-}
-
-// Voice Preferences (New implementation)
+// Voice Preferences
 // Save voice preferences
 export function saveVoicePreferences(preferences: VoicePreferences): void {
   try {

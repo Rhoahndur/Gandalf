@@ -1,6 +1,19 @@
 import jsPDF from 'jspdf';
 import type { Conversation } from '@/types/conversation';
 
+// File System Access API — not in default lib typings
+declare global {
+  interface Window {
+    showSaveFilePicker?: (options?: {
+      suggestedName?: string;
+      types?: Array<{
+        description: string;
+        accept: Record<string, string[]>;
+      }>;
+    }) => Promise<FileSystemFileHandle>;
+  }
+}
+
 /**
  * Convert LaTeX to more readable plain text
  * Exported so it can be used for voice reading and other features
@@ -138,7 +151,7 @@ export async function exportConversationToPDF(conversation: Conversation): Promi
 
       // Find image if present
       const imagePart = message.parts.find((part) => part.type === 'file' && 'url' in part);
-      const imageUrl = imagePart && 'url' in imagePart ? (imagePart as any).url : null;
+      const imageUrl = imagePart && 'url' in imagePart ? (imagePart as { url: string }).url : null;
 
       // Add role label
       checkPageBreak(15);
@@ -255,7 +268,7 @@ export async function exportConversationToPDF(conversation: Conversation): Promi
     if ('showSaveFilePicker' in window) {
       const pdfBlob = pdf.output('blob');
 
-      const handle = await (window as any).showSaveFilePicker({
+      const handle = await window.showSaveFilePicker!({
         suggestedName: 'gandalf_math_chat.pdf',
         types: [
           {

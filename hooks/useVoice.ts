@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 
+// Web Speech API global types are declared in useVoiceRecognition.ts
+
 export interface UseVoiceOptions {
   onTranscript?: (transcript: string) => void;
   onError?: (error: Error) => void;
@@ -48,12 +50,13 @@ export function useVoice({
     return hasRecognition && hasSynthesis;
   });
   const [transcript, setTranscript] = useState('');
-  const [voicesLoaded, setVoicesLoaded] = useState(false);
 
   // Determine the language to use: recognitionLang from preferences, then lang prop, then default
   const effectiveLang = voicePreferences?.recognitionLang || lang;
 
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<InstanceType<NonNullable<typeof window.SpeechRecognition>> | null>(
+    null
+  );
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   // Use refs for callbacks to avoid recreating recognition on every render
@@ -66,37 +69,38 @@ export function useVoice({
     onErrorRef.current = onError;
   }, [onTranscript, onError]);
 
-  // Load voices for speech synthesis
+  // Pre-load voices for speech synthesis (Chrome loads them asynchronously)
   useEffect(() => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
 
-    const loadVoices = () => {
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length > 0) {
-        setVoicesLoaded(true);
+    // Trigger initial voice load
+    window.speechSynthesis.getVoices();
+
+    // Chrome fires this event once voices are ready
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+
+    return () => {
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = null;
       }
     };
-
-    loadVoices();
-
-    // Chrome loads voices asynchronously
-    if (window.speechSynthesis.onvoiceschanged !== undefined) {
-      window.speechSynthesis.onvoiceschanged = loadVoices;
-    }
   }, []);
 
   // Initialize speech recognition
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const SpeechRecognition =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       return;
     }
 
     const recognition = new SpeechRecognition();
-    recognition.continuous = true; // Keep listening continuously
+    recognition.continuous = continuous;
     recognition.interimResults = true; // Get results as you speak
     recognition.lang = effectiveLang;
     recognition.maxAlternatives = 1;
@@ -106,7 +110,7 @@ export function useVoice({
       setTranscript('');
     };
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event) => {
       let finalTranscript = '';
       let interimTranscript = '';
 
@@ -127,7 +131,7 @@ export function useVoice({
       }
     };
 
-    recognition.onerror = (event: any) => {
+    recognition.onerror = (event) => {
       setIsRecording(false);
 
       // Common errors:
@@ -182,7 +186,9 @@ export function useVoice({
 
     try {
       recognitionRef.current.stop();
-    } catch (error) {}
+    } catch (error) {
+      console.error('Failed to stop speech recognition:', error);
+    }
   }, [isRecording]);
 
   const toggleRecording = useCallback(() => {
@@ -258,7 +264,11 @@ export function useVoice({
         try {
           window.speechSynthesis.speak(utterance);
         } catch (error) {
+          console.error('Failed to speak text:', error);
           setIsSpeaking(false);
+          if (onErrorRef.current) {
+            onErrorRef.current(error as Error);
+          }
         }
       }, 100);
     },

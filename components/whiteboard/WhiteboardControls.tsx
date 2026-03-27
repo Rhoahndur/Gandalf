@@ -15,6 +15,12 @@
  */
 
 import { useState } from 'react';
+import type {
+  ExcalidrawElementData,
+  ExcalidrawAppState,
+  ExcalidrawBinaryFiles,
+  ExcalidrawAPI,
+} from '@/types/whiteboard';
 import {
   exportToPNG,
   exportToSVG,
@@ -102,19 +108,12 @@ const CopyIcon = () => (
 );
 
 interface WhiteboardControlsProps {
-  /** Excalidraw API reference for controlling the whiteboard */
-  excalidrawAPI: any | null;
-  /** Current whiteboard elements */
-  elements: readonly any[];
-  /** Current app state */
-  appState: Partial<any>;
-  /** Binary files (images) in the whiteboard */
-  files: any | null;
-  /** Optional conversation title for filename generation */
+  excalidrawAPI: ExcalidrawAPI | null;
+  elements: readonly ExcalidrawElementData[];
+  appState: Partial<ExcalidrawAppState>;
+  files: ExcalidrawBinaryFiles | null;
   conversationTitle?: string;
-  /** Callback when whiteboard is cleared */
   onClear?: () => void;
-  /** Optional custom class name */
   className?: string;
 }
 

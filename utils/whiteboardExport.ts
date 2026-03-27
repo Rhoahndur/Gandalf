@@ -5,8 +5,11 @@
  * Uses Excalidraw's built-in export utilities for consistent rendering.
  */
 
-// NOTE: Types commented out due to TypeScript module resolution issues
-// import type { ExcalidrawElement, AppState, any } from '@excalidraw/excalidraw/types';
+import type {
+  ExcalidrawElementData,
+  ExcalidrawAppState,
+  ExcalidrawBinaryFiles,
+} from '@/types/whiteboard';
 import { exportToCanvas, exportToSvg, exportToBlob } from '@excalidraw/excalidraw';
 
 /**
@@ -19,9 +22,9 @@ import { exportToCanvas, exportToSvg, exportToBlob } from '@excalidraw/excalidra
  * @returns Promise that resolves when download is complete
  */
 export async function exportToPNG(
-  elements: readonly any[],
-  appState: Partial<any>,
-  files: any | null = null,
+  elements: readonly ExcalidrawElementData[],
+  appState: Partial<ExcalidrawAppState>,
+  files: ExcalidrawBinaryFiles | null = null,
   fileName?: string
 ): Promise<void> {
   try {
@@ -74,9 +77,9 @@ export async function exportToPNG(
  * @returns Promise that resolves when download is complete
  */
 export async function exportToSVG(
-  elements: readonly any[],
-  appState: Partial<any>,
-  files: any | null = null,
+  elements: readonly ExcalidrawElementData[],
+  appState: Partial<ExcalidrawAppState>,
+  files: ExcalidrawBinaryFiles | null = null,
   fileName?: string
 ): Promise<void> {
   try {
@@ -124,9 +127,9 @@ export async function exportToSVG(
  * @returns Promise that resolves to the exported blob
  */
 export async function exportToImageBlob(
-  elements: readonly any[],
-  appState: Partial<any>,
-  files: any | null = null,
+  elements: readonly ExcalidrawElementData[],
+  appState: Partial<ExcalidrawAppState>,
+  files: ExcalidrawBinaryFiles | null = null,
   mimeType: string = 'image/png'
 ): Promise<Blob> {
   try {
@@ -185,9 +188,9 @@ export function generateWhiteboardFilename(
  * @returns Promise that resolves when copied to clipboard
  */
 export async function copyToClipboard(
-  elements: readonly any[],
-  appState: Partial<any>,
-  files: any | null = null
+  elements: readonly ExcalidrawElementData[],
+  appState: Partial<ExcalidrawAppState>,
+  files: ExcalidrawBinaryFiles | null = null
 ): Promise<void> {
   try {
     // Check if clipboard API is supported

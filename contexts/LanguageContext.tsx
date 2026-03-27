@@ -14,7 +14,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(DEFAULT_LANGUAGE);
-  const [messages, setMessages] = useState<any>(null);
+  const [messages, setMessages] = useState<Record<string, Record<string, string>> | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

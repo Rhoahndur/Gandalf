@@ -3,22 +3,31 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Excalidraw } from '@excalidraw/excalidraw';
 import '@excalidraw/excalidraw/index.css';
+import type {
+  ExcalidrawElementData,
+  ExcalidrawAppStateData,
+  ExcalidrawInitialData,
+  ExcalidrawBinaryFiles,
+  ExcalidrawAPI,
+  WhiteboardTheme,
+} from '@/types/whiteboard';
 
-// Simplified prop types to avoid complex Excalidraw type imports
 interface WhiteboardCanvasProps {
-  onElementsChange?: (elements: readonly any[]) => void;
-  onSceneChange?: (elements: readonly any[], appState: any, files: any) => void;
-  initialData?: any;
+  onElementsChange?: (elements: readonly ExcalidrawElementData[]) => void;
+  onSceneChange?: (
+    elements: readonly ExcalidrawElementData[],
+    appState: ExcalidrawAppStateData,
+    files: ExcalidrawBinaryFiles
+  ) => void;
+  initialData?: ExcalidrawInitialData;
   isVisible?: boolean;
   className?: string;
   showUI?: boolean;
   viewModeEnabled?: boolean;
   zenModeEnabled?: boolean;
   gridModeEnabled?: boolean;
-  excalidrawAPIRef?: React.MutableRefObject<any>;
+  excalidrawAPIRef?: React.MutableRefObject<ExcalidrawAPI | null>;
 }
-
-type WhiteboardTheme = 'light' | 'dark';
 
 /**
  * WhiteboardCanvas - Main Excalidraw wrapper component
@@ -45,7 +54,7 @@ export function WhiteboardCanvas({
   gridModeEnabled = true,
   excalidrawAPIRef,
 }: WhiteboardCanvasProps) {
-  const [excalidrawAPI, setExcalidrawAPI] = useState<any | null>(null);
+  const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawAPI | null>(null);
   const [theme, setTheme] = useState<WhiteboardTheme>(() => {
     if (typeof document === 'undefined') return 'light';
     return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
@@ -53,7 +62,7 @@ export function WhiteboardCanvas({
 
   // Use useCallback for stable ref function - include excalidrawAPIRef in dependencies
   const excalidrawRefCallback = useCallback(
-    (api: any) => {
+    (api: ExcalidrawAPI) => {
       if (api) {
         setExcalidrawAPI(api);
         // Also set the parent's ref if provided
@@ -87,7 +96,11 @@ export function WhiteboardCanvas({
 
   // Handle scene change events from Excalidraw
   const handleChange = useCallback(
-    (elements: readonly any[], appState: any, files: any) => {
+    (
+      elements: readonly ExcalidrawElementData[],
+      appState: ExcalidrawAppStateData,
+      files: ExcalidrawBinaryFiles
+    ) => {
       // Call the elements change callback if provided
       if (onElementsChange) {
         onElementsChange(elements);

@@ -31,7 +31,7 @@ export interface HintResponse {
   hasNext: boolean;
   visualHint?: {
     type: 'graph' | 'diagram' | 'table';
-    data: any;
+    data: Record<string, unknown>;
   };
 }
 
