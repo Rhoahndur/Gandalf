@@ -1,10 +1,10 @@
 # Gandalf - AI Math Tutor with Socratic Learning
 
-An intelligent math tutoring application that guides students through problem-solving using the Socratic method. Built with Next.js 16, React 19, OpenAI GPT-4 Turbo, and the Vercel AI SDK.
+An intelligent math tutoring application that guides students through problem-solving using the Socratic method. Built with Next.js 16, React 19, Vercel AI SDK 5.x, and a pluggable AI provider (OpenRouter by default, OpenAI as fallback).
 
 ## Overview
 
-Gandalf never gives direct answers. Instead, it asks guiding questions to help students discover solutions independently, just like a real tutor. The system supports text input, image uploads (OCR via GPT-4 Vision), interactive whiteboard (Excalidraw), voice interaction, and multi-language support across 6 languages.
+Gandalf never gives direct answers. Instead, it asks guiding questions to help students discover solutions independently, just like a real tutor. The system supports text input, image uploads (multimodal vision OCR), interactive whiteboard (Excalidraw), voice interaction, and multi-language support across 6 languages.
 
 **Repository:** https://github.com/Rhoahndur/Gandalf.git
 
@@ -15,7 +15,7 @@ Gandalf never gives direct answers. Instead, it asks guiding questions to help s
 - **Socratic Dialogue Engine**: Multi-turn conversations that guide through 6 learning stages (Problem Understanding, Inventory Knowns, Identify Goal, Method Selection, Step-by-Step Guidance, Verification)
 - **Problem Input Methods**:
   - Text entry with live LaTeX preview
-  - Image upload with GPT-4 Vision OCR (jpg, png, webp)
+  - Image upload with multimodal vision OCR (jpg, png, webp)
   - Paste images directly from clipboard
   - Interactive whiteboard with screenshot capture
 - **Math Rendering**: Full LaTeX/KaTeX support for inline (`$...$`) and display (`$$...$$`) equations
@@ -24,7 +24,7 @@ Gandalf never gives direct answers. Instead, it asks guiding questions to help s
 
 ### Enhanced Features
 
-- **Interactive Whiteboard**: Excalidraw integration with screenshot capture, per-conversation state persistence, and LLM-aware serialization
+- **Interactive Whiteboard**: Excalidraw integration with screenshot capture, per-conversation state persistence, LLM-aware serialization, and PNG/SVG/clipboard export
 - **Smart Hints System**: 5-level progressive hint escalation (Gentle Nudge, Direction, Method, First Step, Full Example)
 - **Voice Interface**:
   - Speech-to-text input (Web Speech API)
@@ -33,17 +33,19 @@ Gandalf never gives direct answers. Instead, it asks guiding questions to help s
   - Per-message speaker controls
 - **Difficulty Modes**: Elementary, Middle School, High School, College — each adjusts language complexity, hint frequency, and scaffolding
 - **Multi-language**: English, Spanish, French, German, Chinese (Simplified), Japanese — full UI translations and language-specific system prompts
-- **Math Symbol Keyboard**: Quick LaTeX insertion for common symbols
-- **Dark Mode**: Auto-detection with manual toggle
+- **Math Symbol Keyboard**: Quick LaTeX insertion for common symbols (operators, Greek letters, special symbols, LaTeX commands)
+- **Dark Mode**: System preference auto-detection with manual toggle
 - **Keyboard Shortcuts**: Full navigation without mouse
-- **Settings Modal**: Tabbed preferences for difficulty, language, voice, and theme
+- **Settings Modal**: Tabbed preferences for difficulty, voice, and language
+- **PDF Export**: Conversation export with LaTeX-to-plain-text conversion
+- **Error Boundaries**: Graceful error handling at page and root layout levels
 
 ## Quick Start
 
 ### TL;DR - Get Running in 5 Minutes
 
 ```bash
-# 1. Get OpenAI API key from https://platform.openai.com/api-keys
+# 1. Get a free OpenRouter API key from https://openrouter.ai/keys
 
 # 2. Clone and install
 git clone https://github.com/Rhoahndur/Gandalf.git
@@ -52,7 +54,7 @@ npm install
 
 # 3. Set up environment
 cp .env.example .env.local
-# Edit .env.local and add: OPENAI_API_KEY=sk-your-key-here
+# Edit .env.local and add: OPENROUTER_API_KEY=your-key-here
 
 # 4. Run
 npm run dev
@@ -62,22 +64,33 @@ npm run dev
 ### Prerequisites
 
 - **Node.js 18+** and npm ([Download here](https://nodejs.org/))
-- **OpenAI API key** with GPT-4 Turbo access (see setup below)
+- **API key** — one of the following:
+  - **OpenRouter** (recommended, free tier available): https://openrouter.ai/keys
+  - **OpenAI** (paid, GPT-4 Turbo): https://platform.openai.com/api-keys
 - **Git** ([Download here](https://git-scm.com/downloads))
 
-### Step 1: Get Your OpenAI API Key
+### Step 1: Get Your API Key
+
+#### Option A: OpenRouter (Recommended — Free)
+
+1. Go to [OpenRouter](https://openrouter.ai/)
+2. Sign up or log in
+3. Navigate to **Keys**: https://openrouter.ai/keys
+4. Click **"Create Key"**
+5. Copy the key
+
+OpenRouter provides free access to models like `google/gemini-2.0-flash-exp:free` — no payment required for demos and testing.
+
+#### Option B: OpenAI (Paid)
 
 1. Go to [OpenAI Platform](https://platform.openai.com/signup)
-2. Sign up or log in to your account
-3. Navigate to **API Keys** section: https://platform.openai.com/api-keys
+2. Sign up or log in
+3. Navigate to **API Keys**: https://platform.openai.com/api-keys
 4. Click **"Create new secret key"**
-5. Copy the key (starts with `sk-`) — **you won't be able to see it again!**
-6. **Important:** Make sure you have GPT-4 API access enabled
-   - Check your [usage limits](https://platform.openai.com/account/limits)
-   - You may need to add payment method and verify phone number
-   - Free tier doesn't include GPT-4 — you'll need a paid account
+5. Copy the key (starts with `sk-`)
+6. Ensure GPT-4 Turbo access is enabled (requires paid account)
 
-**Cost Estimate:** ~$0.01-0.03 per conversation with GPT-4 Turbo (very affordable for testing)
+**Cost Estimate:** ~$0.01-0.03 per conversation with GPT-4 Turbo.
 
 ### Step 2: Clone and Install
 
@@ -93,11 +106,17 @@ npm install
 cp .env.example .env.local
 ```
 
-Edit `.env.local` and replace with your actual API key:
+Edit `.env.local` with your API key:
 
 ```env
-OPENAI_API_KEY=sk-proj-your-actual-key-here
+# OpenRouter (default — free tier available)
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+
+# OR OpenAI (fallback — paid, used only if OPENROUTER_API_KEY is not set)
+# OPENAI_API_KEY=sk-your-key-here
 ```
+
+If both keys are set, OpenRouter takes priority.
 
 **Security Warning:**
 
@@ -128,19 +147,24 @@ npm start
 
 ## Tech Stack
 
-| Layer                | Technology                                                                |
-| -------------------- | ------------------------------------------------------------------------- |
-| Framework            | Next.js 16.0.7 (App Router)                                               |
-| UI                   | React 19.2.0, TypeScript 5.9.3                                            |
-| AI                   | OpenAI GPT-4 Turbo, Vercel AI SDK 5.x (`@ai-sdk/openai`, `@ai-sdk/react`) |
-| Math Rendering       | KaTeX 0.16.25                                                             |
-| Whiteboard           | Excalidraw 0.18.0                                                         |
-| Voice                | Web Speech API (browser-native)                                           |
-| Styling              | Tailwind CSS 3.4.18, shadcn/ui                                            |
-| Internationalization | next-intl 4.5.0                                                           |
-| PDF Export           | jspdf 3.0.3, html2canvas 1.4.1                                            |
-| Storage              | localStorage (client-side persistence)                                    |
-| Runtime              | Edge Runtime (Vercel edge functions)                                      |
+| Layer                | Technology                                                       |
+| -------------------- | ---------------------------------------------------------------- |
+| Framework            | Next.js 16.0.7 (App Router)                                      |
+| UI                   | React 19.2.0, TypeScript 5.9.3                                   |
+| AI                   | Vercel AI SDK 5.x (`ai`, `@ai-sdk/openai`, `@ai-sdk/react`)      |
+| AI Provider          | OpenRouter (default, free tier) or OpenAI GPT-4 Turbo (fallback) |
+| Math Rendering       | KaTeX 0.16.25                                                    |
+| Whiteboard           | Excalidraw 0.18.0                                                |
+| Voice                | Web Speech API (browser-native)                                  |
+| Styling              | Tailwind CSS 3.4.18                                              |
+| Internationalization | next-intl 4.5.0                                                  |
+| PDF Export           | jspdf 3.0.3, html2canvas 1.4.1                                   |
+| Storage              | localStorage (client-side persistence)                           |
+| Testing              | Vitest 3.1.4                                                     |
+| Linting/Formatting   | ESLint 9 (flat config) + Prettier 3.5                            |
+| CI/CD                | GitHub Actions (lint, typecheck, format, test, build)            |
+| Pre-commit           | Husky 9 + lint-staged 15                                         |
+| Runtime              | Edge Runtime (Vercel edge functions)                             |
 
 ## Project Structure
 
@@ -149,84 +173,90 @@ Gandalf/
 ├── app/                              # Next.js App Router
 │   ├── layout.tsx                    # Root layout with LanguageProvider
 │   ├── page.tsx                      # Main chat interface (single-page app)
-│   ├── globals.css                   # Global styles + Tailwind
+│   ├── globals.css                   # Global styles, animations, Tailwind
+│   ├── error.tsx                     # Page-level error boundary
+│   ├── global-error.tsx              # Root layout error boundary
+│   ├── icon.svg                      # App favicon
 │   └── api/
-│       ├── chat/route.ts             # Streaming chat endpoint (GPT-4 Turbo)
+│       ├── chat/route.ts             # Streaming chat endpoint
 │       └── hints/route.ts            # Hint generation endpoint
 │
 ├── components/
 │   ├── chat/                         # Chat UI
-│   │   ├── ChatContainer.tsx         # Main wrapper with hints + whiteboard
-│   │   ├── ChatInput.tsx             # Text input, image upload, voice
-│   │   ├── MessageList.tsx           # Message rendering with scroll
+│   │   ├── ChatContainer.tsx         # Main wrapper with hints + whiteboard split-view
+│   │   ├── ChatInput.tsx             # Text input, image upload, voice, LaTeX preview
+│   │   ├── MessageList.tsx           # Message rendering with auto-scroll
 │   │   ├── MessageBubble.tsx         # Individual message with TTS controls
 │   │   ├── MathRenderer.tsx          # KaTeX math rendering
-│   │   ├── MathSymbolKeyboard.tsx    # LaTeX symbol insertion panel
+│   │   ├── MathSymbolKeyboard.tsx    # LaTeX symbol insertion panel (4 groups)
 │   │   ├── VoiceInput.tsx            # Voice recording & TTS playback
-│   │   ├── ImagePreview.tsx          # Image upload preview
+│   │   ├── ImagePreview.tsx          # Image upload preview with file info
 │   │   └── ImageModal.tsx            # Full-screen image viewing
 │   ├── hints/                        # Hint system
 │   │   ├── HintButton.tsx            # Trigger hint generation
 │   │   ├── HintPanel.tsx             # Display hint with navigation
-│   │   └── HintLevelIndicator.tsx    # Visual level progress
+│   │   ├── HintLevelIndicator.tsx    # Visual level progress (dot indicators)
+│   │   └── index.ts                  # Barrel exports
 │   ├── whiteboard/                   # Excalidraw integration
-│   │   ├── WhiteboardCanvas.tsx      # Drawing canvas
-│   │   ├── WhiteboardControls.tsx    # Tool controls
-│   │   ├── WhiteboardToolbar.tsx     # Actions (save, clear, export)
-│   │   └── WhiteboardTest.tsx        # Component tests
+│   │   ├── WhiteboardCanvas.tsx      # Drawing canvas with theme sync
+│   │   ├── WhiteboardControls.tsx    # Export, zoom, grid, clear controls
+│   │   ├── WhiteboardToolbar.tsx     # Visibility toggle + basic actions
+│   │   └── index.ts                  # Barrel exports
 │   ├── settings/                     # User preferences
-│   │   ├── SettingsModal.tsx         # Tabbed settings interface
-│   │   ├── DifficultySelector.tsx    # 4-level difficulty selector
+│   │   ├── SettingsModal.tsx         # Tabbed settings (difficulty, voice, language)
+│   │   ├── VoiceSettings.tsx         # TTS and speech recognition configuration
 │   │   ├── LanguageSettings.tsx      # 6-language selector
-│   │   ├── TTSSettings.tsx           # Voice rate, pitch, volume
-│   │   ├── VoiceSettings.tsx         # Voice configuration
-│   │   └── DarkModeToggle.tsx        # Theme toggle
+│   │   └── DarkModeToggle.tsx        # Theme toggle with system preference detection
 │   ├── layout/                       # App chrome
 │   │   ├── Header.tsx                # Top bar with controls
-│   │   └── ConversationSidebar.tsx   # Chat history sidebar
-│   └── ui/                           # shadcn/ui + custom components
-│       └── KeyboardShortcutsHelp.tsx  # Shortcuts reference modal
+│   │   └── ConversationSidebar.tsx   # Chat history sidebar with PDF export
+│   └── ui/                           # Custom UI components
+│       └── KeyboardShortcutsHelp.tsx # Shortcuts reference modal
+│
+├── lib/                              # Core library
+│   └── ai-provider.ts               # Centralized AI provider (OpenRouter/OpenAI)
 │
 ├── prompts/                          # AI system prompts
 │   ├── socraticPrompts.ts            # Core Socratic method prompts (6 languages)
-│   ├── socraticPrompt.ts             # Alternative prompt version
 │   ├── hintPrompts.ts                # 5-level hint system prompts (6 languages)
-│   └── whiteboardPrompt.ts           # Whiteboard context injection
+│   └── whiteboardPrompt.ts           # Whiteboard awareness + context injection
 │
 ├── hooks/                            # React custom hooks
-│   ├── useHints.ts                   # Hint state management
-│   ├── useKeyboardShortcuts.ts       # Keyboard shortcut registration
-│   ├── useVoice.ts                   # Combined voice interface
-│   ├── useVoiceRecognition.ts        # Speech-to-text
-│   ├── useTextToSpeech.ts            # Text-to-speech
-│   └── useWhiteboardState.ts         # Whiteboard state management
+│   ├── useHints.ts                   # Hint state management with localStorage
+│   ├── useKeyboardShortcuts.ts       # Platform-aware keyboard shortcut registration
+│   ├── useVoice.ts                   # Combined voice interface (STT + TTS)
+│   ├── useVoiceRecognition.ts        # Speech-to-text (Web Speech API)
+│   └── useTextToSpeech.ts            # Text-to-speech with LaTeX conversion
 │
 ├── utils/                            # Utility functions
 │   ├── storageManager.ts             # localStorage conversation persistence
-│   ├── hintManager.ts                # Hint state persistence
+│   ├── hintManager.ts                # Hint state persistence (per-problem)
 │   ├── latexParser.ts                # LaTeX detection & parsing
-│   ├── imageToBase64.ts              # Image conversion
+│   ├── imageToBase64.ts              # Image conversion for API
 │   ├── imageCompression.ts           # Image optimization (<1MB)
-│   ├── fileValidator.ts              # File upload validation
-│   ├── pdfExport.ts                  # LaTeX-to-plain-text conversion
+│   ├── fileValidator.ts              # File upload validation (type, size)
+│   ├── pdfExport.ts                  # Conversation PDF export
 │   ├── whiteboardStorage.ts          # Whiteboard state persistence
-│   ├── whiteboardToLLM.ts            # Whiteboard serialization for AI
-│   └── whiteboardExport.ts           # Whiteboard export utilities
+│   ├── whiteboardToLLM.ts            # Whiteboard serialization for AI context
+│   ├── whiteboardExport.ts           # PNG/SVG/clipboard export
+│   ├── latexParser.test.ts           # LaTeX parser tests (16 tests)
+│   ├── fileValidator.test.ts         # File validator tests (15 tests)
+│   └── storageManager.test.ts        # Storage manager tests (18 tests)
 │
 ├── types/                            # TypeScript definitions
-│   ├── conversation.ts               # Chat message types
-│   ├── difficulty.ts                 # DifficultyLevel type + defaults
-│   ├── language.ts                   # Language type + defaults
-│   ├── voice.ts                      # VoicePreferences type + defaults
-│   ├── hints.ts                      # HintRequest/HintResponse types
+│   ├── conversation.ts               # Chat message types (UIMessage-based)
+│   ├── difficulty.ts                 # DifficultyLevel type + configs
+│   ├── language.ts                   # Language type + configs
+│   ├── voice.ts                      # VoicePreferences type + speech lang mapping
+│   ├── hints.ts                      # HintLevel, HintState, HintRequest/Response
 │   └── whiteboard.ts                 # Whiteboard/Excalidraw types
 │
 ├── contexts/                         # React Context
-│   └── LanguageContext.tsx            # Global language state provider
+│   └── LanguageContext.tsx            # Global language state + NextIntlClientProvider
 │
 ├── i18n/                             # next-intl configuration
-│   ├── config.ts                     # Locale configuration
-│   └── request.ts                    # Request-level i18n setup
+│   ├── config.ts                     # Locale list + defaults
+│   └── request.ts                    # Per-request locale + message loading
 │
 ├── locales/                          # UI translations (6 languages)
 │   ├── en/                           # English
@@ -238,13 +268,16 @@ Gandalf/
 │       ├── common.json               # UI strings
 │       └── settings.json             # Settings strings
 │
-├── docs/                             # Project documentation & planning
-│
+├── .github/workflows/ci.yml          # GitHub Actions CI pipeline
+├── .husky/pre-commit                 # Husky pre-commit hook (lint-staged)
+├── eslint.config.mjs                 # ESLint flat config (next/core-web-vitals + Prettier)
+├── vitest.config.ts                  # Vitest test runner configuration
 ├── next.config.js                    # Next.js + next-intl plugin
-├── tailwind.config.js                # Tailwind CSS configuration
+├── tailwind.config.js                # Tailwind CSS (class-based dark mode)
 ├── tsconfig.json                     # TypeScript (strict mode, @/* paths)
 ├── postcss.config.js                 # PostCSS + autoprefixer
-├── .eslintrc.json                    # ESLint (next/core-web-vitals)
+├── .prettierrc                       # Prettier configuration
+├── .editorconfig                     # EditorConfig (indent, EOL, charset)
 ├── .env.example                      # Environment variable template
 └── package.json                      # Dependencies & scripts
 ```
@@ -270,10 +303,11 @@ Streaming chat endpoint for Socratic tutoring.
 
 **Behavior:**
 
+- Validates API key presence at route level
 - Prepends language- and difficulty-aware Socratic system prompt
 - Appends whiteboard awareness context if whiteboard data is present
 - Limits context to last 15 messages to prevent token overflow
-- Uses `gpt-4-turbo` for both text and image (multimodal) messages
+- Selects `VISION_MODEL` for messages with images, `TEXT_MODEL` otherwise (from `lib/ai-provider.ts`)
 - Returns streaming response consumed by `useChat` hook on the client
 
 ### POST /api/hints
@@ -302,6 +336,8 @@ Generates a contextual hint at a specific escalation level.
 }
 ```
 
+**Validation:** Validates hint level range (0-4), difficulty level, language, and API key presence. Returns specific error messages for rate limiting and auth failures.
+
 ### GET /api/hints
 
 Returns metadata about available hint levels.
@@ -317,6 +353,8 @@ Returns metadata about available hint levels.
 | `Cmd/Ctrl + B`         | Toggle whiteboard            |
 | `Cmd/Ctrl + /`         | Show keyboard shortcuts help |
 | `Cmd/Ctrl + Shift + R` | Read last AI message aloud   |
+| `Shift + Enter`        | New line in input            |
+| `Cmd/Ctrl + V`         | Paste images from clipboard  |
 | `Escape`               | Close modals / stop voice    |
 
 ## Configuration
@@ -324,9 +362,19 @@ Returns metadata about available hint levels.
 ### Environment Variables
 
 ```bash
-# Required
-OPENAI_API_KEY=sk-...           # OpenAI API key with GPT-4 Turbo access
+# AI Provider (set at least one)
+OPENROUTER_API_KEY=...         # OpenRouter API key (default provider, free tier available)
+OPENAI_API_KEY=sk-...          # OpenAI API key (fallback, requires paid account)
 ```
+
+If both keys are set, OpenRouter takes priority. The provider is configured centrally in `lib/ai-provider.ts`.
+
+### AI Provider Details
+
+| Provider   | Env Var              | Text Model                         | Vision Model                       | Cost        |
+| ---------- | -------------------- | ---------------------------------- | ---------------------------------- | ----------- |
+| OpenRouter | `OPENROUTER_API_KEY` | `google/gemini-2.0-flash-exp:free` | `google/gemini-2.0-flash-exp:free` | Free        |
+| OpenAI     | `OPENAI_API_KEY`     | `gpt-4-turbo`                      | `gpt-4-turbo`                      | ~$0.01/conv |
 
 ### User Preferences (localStorage)
 
@@ -336,8 +384,9 @@ All preferences persist across sessions via localStorage:
 - **Language** — en, es, fr, de, zh, ja
 - **Voice settings** — auto-read, voice selection, rate, pitch, volume, recognition language
 - **Theme** — light/dark (auto-detected with manual toggle)
-- **Whiteboard** — open/closed state
+- **Whiteboard** — open/closed state, per-conversation drawing state
 - **Conversations** — full chat history with timestamps
+- **Hints** — per-conversation, per-problem hint state and history
 
 ## Example Problem Walkthroughs
 
@@ -395,7 +444,7 @@ Student: "x = 2 or x = 3"
 
 1. Push code to GitHub
 2. Import repository at [vercel.com](https://vercel.com)
-3. Add `OPENAI_API_KEY` to environment variables
+3. Add `OPENROUTER_API_KEY` (or `OPENAI_API_KEY`) to environment variables
 4. Deploy — automatic on push to main
 
 Vercel provides automatic HTTPS, global CDN, and edge function support. Free for personal projects.
@@ -420,37 +469,61 @@ pm2 start npm --name "gandalf" -- start
 **Production requirements:**
 
 - HTTPS (required for Web Speech API)
-- `OPENAI_API_KEY` environment variable
+- `OPENROUTER_API_KEY` or `OPENAI_API_KEY` environment variable
 
 ## Development
 
 ```bash
-npm run dev        # Start dev server (Turbopack)
-npm run build      # Production build
-npm start          # Production server
-npm run lint       # ESLint
+npm run dev            # Start dev server (Turbopack)
+npm run build          # Production build
+npm start              # Production server
+npm run lint           # ESLint
+npm run typecheck      # TypeScript type checking
+npm run test           # Run tests (Vitest)
+npm run test:watch     # Run tests in watch mode
+npm run format         # Format code (Prettier)
+npm run format:check   # Check formatting
 ```
+
+### CI Pipeline
+
+GitHub Actions runs on every push/PR to `main`:
+
+1. `npm run lint` — ESLint checks
+2. `npm run typecheck` — TypeScript compilation
+3. `npm run format:check` — Prettier formatting
+4. `npm run test` — Vitest test suite (49 tests)
+5. `npm run build` — Production build verification
+
+### Pre-commit Hooks
+
+Husky + lint-staged runs automatically on `git commit`:
+
+- `*.{ts,tsx}` files: Prettier format + ESLint fix
+- `*.{json,md,yml,yaml,css}` files: Prettier format
 
 ## Troubleshooting
 
-| Problem                            | Solution                                                                                   |
-| ---------------------------------- | ------------------------------------------------------------------------------------------ |
-| "OpenAI API key is required"       | Ensure `.env.local` exists with `OPENAI_API_KEY=sk-...`. Restart dev server.               |
-| "Incorrect API key provided"       | Verify key is correct, no extra spaces/quotes, starts with `sk-`                           |
-| "You exceeded your current quota"  | Add payment method at platform.openai.com/account/billing                                  |
-| Port 3000 already in use           | Run on different port: `PORT=3001 npm run dev`                                             |
-| Voice features not working         | Requires HTTPS in production (works on localhost). Use Chrome/Edge. Grant mic permissions. |
-| LaTeX not rendering                | Check browser console for KaTeX errors. Verify `$...$` or `$$...$$` delimiters.            |
-| Image upload fails                 | Check file size (<5MB), format (jpg/png/webp), and GPT-4 Turbo API access.                 |
-| Whiteboard screenshot not captured | Ensure Excalidraw has content. Check browser console for errors.                           |
+| Problem                            | Solution                                                                                      |
+| ---------------------------------- | --------------------------------------------------------------------------------------------- |
+| "API key is required"              | Ensure `.env.local` exists with `OPENROUTER_API_KEY` or `OPENAI_API_KEY`. Restart dev server. |
+| "Incorrect API key provided"       | Verify key is correct, no extra spaces/quotes.                                                |
+| "You exceeded your current quota"  | Switch to OpenRouter (free tier) or add payment method at your provider.                      |
+| Port 3000 already in use           | Run on different port: `PORT=3001 npm run dev`                                                |
+| Voice features not working         | Requires HTTPS in production (works on localhost). Use Chrome/Edge. Grant mic permissions.    |
+| LaTeX not rendering                | Check browser console for KaTeX errors. Verify `$...$` or `$$...$$` delimiters.               |
+| Image upload fails                 | Check file size (<5MB), format (jpg/png/webp), and that your AI provider supports vision.     |
+| Whiteboard screenshot not captured | Ensure Excalidraw has content. Check browser console for errors.                              |
+| Pre-commit hook fails              | Run `npm run lint` and `npm run format` to fix issues, then re-commit.                        |
 
 ## Contributing
 
 1. Fork the repository
 2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+3. Make changes (pre-commit hooks auto-format and lint)
+4. Commit changes (`git commit -m 'Add amazing feature'`)
+5. Push to branch (`git push origin feature/amazing-feature`)
+6. Open Pull Request (CI runs automatically)
 
 ## License
 
@@ -459,6 +532,7 @@ ISC License
 ## Acknowledgments
 
 - Built with [Vercel AI SDK](https://sdk.vercel.ai/)
+- AI via [OpenRouter](https://openrouter.ai/) and [OpenAI](https://openai.com/)
 - Math rendering by [KaTeX](https://katex.org/)
 - Whiteboard by [Excalidraw](https://excalidraw.com/)
 - Inspired by Socratic teaching methodology
