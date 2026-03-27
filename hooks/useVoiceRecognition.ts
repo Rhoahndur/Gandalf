@@ -223,8 +223,8 @@ export function useVoiceRecognition(
       if (recognitionRef.current) {
         try {
           recognitionRef.current.stop();
-        } catch (e) {
-          // Ignore errors during cleanup
+        } catch (error) {
+          console.error('Failed to stop recognition during cleanup:', error);
         }
         recognitionRef.current = null;
       }
@@ -279,8 +279,8 @@ export function useVoiceRecognition(
       recognitionRef.current.stop();
       setIsListening(false);
       isStartingRef.current = false;
-    } catch (err) {
-      // Ignore errors when stopping
+    } catch (error) {
+      console.error('Failed to stop speech recognition:', error);
       setIsListening(false);
       isStartingRef.current = false;
     }
